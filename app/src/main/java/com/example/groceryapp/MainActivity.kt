@@ -24,5 +24,9 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        websiteButton.setOnClickListener{
+            startActivity(Intent(this, Website::class.java))
+        }
+
     }
 }
