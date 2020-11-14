@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Grocery App</string>
+    <string name="t_n_c">TERMS &amp; CONDITIONS <br/><br/>
+        1. A minimum purchase of RM200 in a single receipt is required to be entitled to the RM22 discount.<br/>
+        2. Only limited to first 200 customers per daily.</string>
 </resources>

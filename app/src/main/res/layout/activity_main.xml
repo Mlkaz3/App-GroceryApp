@@ -22,11 +22,7 @@
         android:id="@+id/salesButton"
         android:layout_width="0dp"
         android:layout_height="191dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="#00323232"
+        android:background="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +84,7 @@
         app:srcCompat="@drawable/websitebutton" />
 
     <ImageButton
-        android:id="@+id/imageButton13"
+        android:id="@+id/shopnowButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
