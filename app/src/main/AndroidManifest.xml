@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
-        <activity android:name=".Cart"></activity>
+        <activity android:name=".Recipe"></activity>
+        <activity android:name=".Cart" />
         <activity android:name=".ShopNow" />
         <activity android:name=".Website" />
         <activity android:name=".Sales" />
