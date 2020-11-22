@@ -18,7 +18,6 @@ class ShopNow : AppCompatActivity() {
         val cartButton: ImageButton = findViewById(R.id.cart)
         cartButton.setOnClickListener {
             startActivity(Intent(this, Cart::class.java))
-
         }
 
     }
