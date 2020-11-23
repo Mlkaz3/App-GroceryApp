@@ -13,7 +13,14 @@ class MainActivity : AppCompatActivity() {
         //Accessing UI
 
         val profileButton:ImageButton = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener{
+            //startActivity(Intent(this, ::class.java))
+        }
+
         val recipeButton:ImageButton = findViewById(R.id.recipeButton)
+        recipeButton.setOnClickListener{
+            startActivity(Intent(this, Recipe::class.java))
+        }
 
         val cartButton:ImageButton = findViewById(R.id.cartButton)
         cartButton.setOnClickListener{

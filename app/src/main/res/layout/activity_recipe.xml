@@ -6,4 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".Recipe">
 
+    <ImageButton
+        android:id="@+id/backA"
+        android:layout_width="66dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintStart_toStartOf="@+id/backA"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/recipec" />
+
+    <ImageButton
+        android:id="@+id/vegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        app:srcCompat="@drawable/recipeb" />
+
+    <ImageButton
+        android:id="@+id/nonvegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vegan"
+        app:srcCompat="@drawable/recipea" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
