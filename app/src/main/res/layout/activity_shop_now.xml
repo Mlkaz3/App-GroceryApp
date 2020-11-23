@@ -6,6 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ShopNow">
 
+    <TextView
+        android:id="@+id/Categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="100dp"
+        android:fontFamily="sans-serif"
+        android:text="Categories"
+        android:textColor="#3B693A"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back" />
+
+    <TextView
+        android:id="@+id/MostPopular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif"
+        android:text="Most Popular"
+        android:textColor="#3B693A"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalCategory" />
+
     <ImageButton
         android:id="@+id/back"
         android:layout_width="wrap_content"
@@ -29,5 +57,87 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/cart" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalCategory"
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Categories">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonEggs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/eggcat" />
+
+            <ImageButton
+                android:id="@+id/imageButtonChicken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/chickencat" />
+
+            <ImageButton
+                android:id="@+id/imageButtonSeafood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/seafoodcat" />
+
+            <ImageButton
+                android:id="@+id/imageButtonVegetable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/vegecat" />
+
+            <ImageButton
+                android:id="@+id/imageButtonFruits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px"
+                android:background="#00FFFFFF"
+                app:srcCompat="@drawable/fruitcat" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalPopular"
+        android:layout_width="0dp"
+        android:layout_height="342dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MostPopular">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
