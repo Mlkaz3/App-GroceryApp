@@ -6,7 +6,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClients {
     private static Retrofit retrofit = null;
-
     public static Retrofit getClientFunction(String baseUrl)
     {
         if(retrofit == null){
