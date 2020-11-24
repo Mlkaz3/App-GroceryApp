@@ -2,22 +2,27 @@ package com.example.groceryapp.Adapter
 
 /*credit for recycler view adapter:
     https://www.youtube.com/watch?v=E3x6pCZutLA&t=207s
+    https://www.youtube.com/watch?v=rBQi_7L-Uc8
 */
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.groceryapp.R
 import com.example.groceryapp.Model.Product
+import com.example.groceryapp.Model.TopProductItem
+import com.example.groceryapp.R
+import com.squareup.picasso.Picasso
+
 
 class TopProductAdapter(val context:Context, val topProduct:List<Product>) : RecyclerView.Adapter<TopProductAdapter.TopProductViewHolder>(){
 
     inner class TopProductViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
-        val productNameText: TextView = itemView.findViewById(R.id.product_title)
-        val productImg : TextView = itemView.findViewById(R.id.image_product)
+        var productNameText: TextView = itemView.findViewById(R.id.product_title)
+        var productImg:ImageView = itemView.findViewById(R.id.image_product)
 
     }
 
@@ -32,9 +37,13 @@ class TopProductAdapter(val context:Context, val topProduct:List<Product>) : Rec
 
     override fun onBindViewHolder(holder: TopProductViewHolder, position: Int) {
         val topProduct = topProduct[position]
+//        holder.productNameText.text = "${topProduct?.name}"
+//        val topProductImageLink = "${topProduct?.link}"
         holder.productNameText.text = topProduct.getName()
-        holder.productImg.text = topProduct.getLink()
-
+        val topProductImageLink = topProduct.getLink()
+        Picasso.with(context).load(topProductImageLink).into(holder.productImg)
 
     }
+
+
 }
