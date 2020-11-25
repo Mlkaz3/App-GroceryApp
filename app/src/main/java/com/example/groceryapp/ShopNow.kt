@@ -4,29 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.Volley
-import com.example.groceryapp.Adapter.TopProductAdapter
+import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Model.Product
-import org.json.JSONException
+import com.squareup.picasso.Picasso
 
 
 class ShopNow : AppCompatActivity() {
-    val lst_topProduct: RecyclerView = findViewById(R.id.topProduct)
-    var JSON_URL:String ="https://groceryapptarucproject.000webhostapp.com/connect/getmenu.php"
 
-    //Initialize variables and UI
-    var products = ArrayList<Product>()
+    //initialise product array list
+    val productlist = ArrayList<Product>()
+    val adapter = ProductAdapter(this,productlist)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_now)
 
-        var adapter = TopProductAdapter(this,products)
-        adapter.setProduct(products)
+        val picassoBuilder = Picasso.Builder(this)
+        val picasso = picassoBuilder.build()
+
 
         val backButton: ImageButton = findViewById(R.id.back)
         backButton.setOnClickListener {
@@ -38,36 +35,21 @@ class ShopNow : AppCompatActivity() {
             startActivity(Intent(this, Cart::class.java))
         }
 
-//        fetchTopProduct()
+        //bring fake value inside
+        productlist += Product("http://mrfarmergrocer.com/wp-content/uploads/2020/04/Tomato-1.jpg","Tomato(±500g)","Vegetables",3.60,10)
+        productlist += Product("http://mrfarmergrocer.com/wp-content/uploads/2020/04/Aust.-Red-Grapes-1.jpg","Aust. Red Grape (±1kg)","Fruits",28.0,10)
+        productlist += Product("http://mrfarmergrocer.com/wp-content/uploads/2020/04/Saba-Mackerel-Fillet-1.jpg","Saba Mackerel Fillet (±550g)","Seafood",28.50,10)
+        productlist += Product("http://mrfarmergrocer.com/wp-content/uploads/2020/05/33-600x600.jpg","Herbal Free Range Chicken (1 Ekor)","Chickens",39.90,10)
+        productlist += Product("http://mrfarmergrocer.com/wp-content/uploads/2020/05/P10101321-page-001-600x450.jpg","LTP Century Egg (4pcs)","Eggs",7.0,10)
+
+        //access recyclerview UI
+        val recyclerview:RecyclerView = findViewById(R.id.topProduct)
+
+        recyclerview.adapter = adapter
+        recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
+        recyclerview.setHasFixedSize(true)
 
     }
 
-    private fun fetchTopProduct() {
-        val queue = Volley.newRequestQueue(this)
-        val jsonArrayRequest = JsonArrayRequest(
-            Request.Method.GET,
-            JSON_URL,
-            null,
-            Response.Listener { response ->
-                for (i in 0 until response.length()) {
-                    try {
-                        val topProductObject = response.getJSONObject(i)
-                        val productName = topProductObject.getString("Name")
-                        val productImage = topProductObject.getString("Link")
-                        val product:Product = Product(productName,productImage)
-                        products.add(product)
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                }
-//                lst_topProduct.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//                lst_topProduct.setHasFixedSize(true)
-//                TopProductAdapter = TopProductAdapter(applicationContext, products)
-//                lst_topProduct.setAdapter(TopProductAdapter)
-            },
-            Response.ErrorListener {  })
 
-        queue.add(jsonArrayRequest)
-
-    }
 }
