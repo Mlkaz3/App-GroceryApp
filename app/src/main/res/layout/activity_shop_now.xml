@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="55dp"
         android:fontFamily="sans-serif"
         android:text="Categories"
         android:textColor="#3B693A"

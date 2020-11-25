@@ -10,16 +10,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groceryapp.Model.Product
 import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
+import java.text.DecimalFormat
+
 
 class ProductAdapter(contexts: Context,private val productList: ArrayList<Product>): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     //declare a context
     var context:Context = contexts
 
+    //round off function
+    val df: DecimalFormat = DecimalFormat("0.00")
+
     //to hold one single view only
     inner class ProductViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val img: ImageView = itemView.findViewById(R.id.image_product)
-        val txt: TextView = itemView.findViewById(R.id.product_title)
+        val title: TextView = itemView.findViewById(R.id.product_title)
+        val stock: TextView = itemView.findViewById(R.id.stock)
+        val price:TextView = itemView.findViewById(R.id.price)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -33,7 +40,15 @@ class ProductAdapter(contexts: Context,private val productList: ArrayList<Produc
         val currentItem = productList[position]
         Picasso.with(context).load(currentItem.productImage).into(holder.img)
         Picasso.with(context).isLoggingEnabled = true
-        holder.txt.text = currentItem.productName
+        holder.title.text = currentItem.productName
+        //check for stock amount
+        if(currentItem.productStock > 0){
+            holder.stock.text = "In Stock"
+        }
+        else{
+            holder.stock.text = "Out of Stock"
+        }
+        holder.price.text = "RM" + df.format(currentItem.productPrice).toString()
 
     }
 
