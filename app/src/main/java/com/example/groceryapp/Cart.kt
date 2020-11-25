@@ -24,8 +24,12 @@ class Cart : AppCompatActivity() {
             finish()
         }
 
-        var product:Product = Product("http://mrfarmergrocer.com/wp-content/uploads/2020/04/Tomato-1.jpg","Tomato(±500g)","Vegetables",3.60,10)
-        userCartList += CartItem(2, product)
+        var product0:Product = Product("http://mrfarmergrocer.com/wp-content/uploads/2020/04/Tomato-1.jpg","Tomato(±500g)","Vegetables",3.60,10)
+        userCartList += CartItem(2, product0)
+        userCartList += CartItem(2, product0)
+        userCartList += CartItem(2, product0)
+        userCartList += CartItem(2, product0)
+        userCartList += CartItem(2, product0)
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)

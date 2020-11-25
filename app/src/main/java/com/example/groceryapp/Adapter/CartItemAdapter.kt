@@ -23,9 +23,9 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
 
     //to hold one single view only
     inner class CartItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val img: ImageView = itemView.findViewById(R.id.image_product)
-        val title: TextView = itemView.findViewById(R.id.product_title)
-        val price: TextView = itemView.findViewById(R.id.price)
+        val img: ImageView = itemView.findViewById(R.id.imageView)
+        val title: TextView = itemView.findViewById(R.id.product_cart)
+        val price: TextView = itemView.findViewById(R.id.price_cart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
