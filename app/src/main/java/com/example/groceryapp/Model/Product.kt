@@ -5,10 +5,11 @@ class Product {
     private var Name: String? = null
     private var Link: String? = null
 
-    fun TopProduct(Name: String?, Link: String?) {
-        this.Link = Link
+    constructor(Name: String?, Link: String?) {
         this.Name = Name
+        this.Link = Link
     }
+
 
     fun getID(): String? {
         return ID
