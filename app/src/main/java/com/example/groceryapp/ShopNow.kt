@@ -27,7 +27,6 @@ class ShopNow : AppCompatActivity() {
     //declare product array list
     lateinit var adapter: ProductAdapter
     lateinit var productlist: ArrayList<Product>
-    val Categories:TextView = findViewById(R.id.Categories)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,9 +83,12 @@ class ShopNow : AppCompatActivity() {
                             productlist.add(product)
                         }
                         Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
+
                     }
                 }catch (e:Exception){
                     Log.d("Main", "Response: %s".format(e.message.toString()))
+
+
                 }
             },
             Response.ErrorListener { error ->
