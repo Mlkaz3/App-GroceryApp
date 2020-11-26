@@ -13,10 +13,13 @@ import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
 
-class ProductAdapter(contexts: Context,private val productList: ArrayList<Product>): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     //declare a context
     var context:Context = contexts
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    // Cached copy of user
+    private var products = emptyList<Product>()
 
     //round off function
     val df: DecimalFormat = DecimalFormat("0.00")
@@ -30,14 +33,20 @@ class ProductAdapter(contexts: Context,private val productList: ArrayList<Produc
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.product,parent,false)
+        val itemView = inflater.inflate(R.layout.product,parent,false)
         return ProductViewHolder(itemView)
     }
 
-    override fun getItemCount() = productList.size
+    override fun getItemCount() = products.size
+
+
+    internal fun setProducts(product: List<Product>) {
+        this.products = product
+        notifyDataSetChanged()
+    }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val currentItem = productList[position]
+        val currentItem = products[position]
         Picasso.with(context).load(currentItem.productImage).into(holder.img)
         Picasso.with(context).isLoggingEnabled = true
         holder.title.text = currentItem.productName
