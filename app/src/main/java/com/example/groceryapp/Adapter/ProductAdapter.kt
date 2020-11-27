@@ -90,7 +90,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         else{
             //step2: write to database(cart section), update cart item :)
             insertCart(item)
-
+            Toast.makeText(context, item.product_name + " adding to cart", Toast.LENGTH_LONG).show()
             //step3: write to database(product section), update stock amount
         }
 
@@ -113,7 +113,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
                             val jsonResponse  = JSONObject(strResponse)
                             val success: String = jsonResponse.get("success").toString()
 
-                            if(success.equals("1")){
+                            if(success == "1"){
                                 Toast.makeText(context, item.product_name + " added to cart", Toast.LENGTH_LONG).show()
 
                             }else{
