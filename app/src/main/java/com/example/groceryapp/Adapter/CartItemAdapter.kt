@@ -26,6 +26,7 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
         val img: ImageView = itemView.findViewById(R.id.imageView)
         val title: TextView = itemView.findViewById(R.id.product_cart)
         val price: TextView = itemView.findViewById(R.id.price_cart)
+        val qty:TextView = itemView.findViewById(R.id.qty)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
@@ -37,10 +38,12 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
 
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         val currentItem = cartItemList[position]
-        Picasso.with(context).load(currentItem.productInfo.productImage).into(holder.img)
+        Picasso.with(context).load(currentItem.product_img).into(holder.img)
         Picasso.with(context).isLoggingEnabled = true
-        holder.title.text = currentItem.productInfo.productName
-        holder.price.text = "RM" + df.format(currentItem.productInfo.productPrice).toString()
+        holder.title.text = currentItem.product_name
+        holder.price.text = "RM" + df.format(currentItem.product_price).toString()
+
+        //not sure how to deal wth qty yet
 
     }
 

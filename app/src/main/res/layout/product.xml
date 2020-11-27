@@ -52,7 +52,7 @@
             android:text="RM X.X" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonAddCart"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="#B1C9B1"

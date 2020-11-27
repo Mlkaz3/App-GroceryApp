@@ -61,7 +61,7 @@ class ShopNow : AppCompatActivity() {
 
     }
 
-    private fun readProduct() {
+    fun readProduct() {
         //read from database
         val url = getString(R.string.url_server) + getString(R.string.url_read_product)
 

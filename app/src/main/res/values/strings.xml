@@ -8,4 +8,8 @@
     <string name="nonvegan">Non-vegan</string>
     <string name="url_server">https://groceryapptarucproject.000webhostapp.com/grocery/</string>
     <string name="url_read_product">product/read.php</string>
+    <string name="url_read_cart">cart/readcart.php</string>
+    <string name="url_insert_cart">cart/insert.php/</string>
 </resources>
+
+    
