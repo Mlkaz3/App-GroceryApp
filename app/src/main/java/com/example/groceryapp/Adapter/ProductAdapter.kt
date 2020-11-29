@@ -23,7 +23,6 @@ import java.text.DecimalFormat
 
 
 class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
-
     //declare a context
     var context:Context = contexts
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -69,25 +68,30 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         holder.price.text = "RM" + df.format(currentItem.productPrice).toString()
         //when the user press add to cart button, called AddCart function
         holder.buttonAddCart.setOnClickListener {
-            AddCart(position)
+            //step0: retrieve the value and store it in a local variable
+            var name = products[position].productName
+            var image = products[position].productImage
+            var price = products[position].productPrice
+            var stock = products[position].productStock
+            //things to be added into cart
+            var item:CartItem = CartItem(1,name,"customer1cart",price,image)
+
+            if(stock<=0){
+                Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
+            }else{
+                AddCart(item)
+            }
         }
     }
 
     //AddCart function
-    fun AddCart(position: Int){
+    fun AddCart(item: CartItem){
+            //step1: add to local cart
+            //idk how to add eh omg
 
-        //step0: retrieve the value and store it in a local variable
-        var name = products[position].productName
-        var image = products[position].productImage
-        var price = products[position].productPrice
-        var stock = products[position].productStock
-        var item:CartItem = CartItem(1,name,"customer1cart",price,image)
 
-        //step1: check product stock availability
-        if(stock<=0){
-            Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
-        }
-        else{
+            Toast.makeText(context, "Successfully Added", Toast.LENGTH_LONG).show()
+
             //step2: write to database(cart section), update cart item :)
             val url = "https://groceryapptarucproject.000webhostapp.com/grocery/writetodatabase.php/" + "?product_name=" + item.product_name +
                     "&quantity=" + item.productQty + "&cart_id=" + item.cart_id + "&product_img=" + item.product_img +
@@ -131,13 +135,9 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
             MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
         }
 
-
-            Toast.makeText(context, item.product_name + " adding to cart", Toast.LENGTH_LONG).show()
-
-
             //step3: write to database(product section), update stock amount
         }
 
 
 
-    }
+

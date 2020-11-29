@@ -14,15 +14,17 @@ import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Adapter.ProductAdapter
+import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 
 
-class ShopNow : AppCompatActivity() {
+class ShopNow : AppCompatActivity()  {
 
     //declare product array list
     lateinit var adapter: ProductAdapter
@@ -61,6 +63,7 @@ class ShopNow : AppCompatActivity() {
 
     }
 
+    //read and display Product
     fun readProduct() {
         //read from database
         val url = getString(R.string.url_server) + getString(R.string.url_read_product)

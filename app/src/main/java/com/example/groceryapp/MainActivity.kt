@@ -4,9 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
-//import com.example.groceryapp.Utils.LoginActivity
+import com.example.groceryapp.Model.CartItem
+import com.example.groceryapp.Cart
+import com.example.groceryapp.Model.Product
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

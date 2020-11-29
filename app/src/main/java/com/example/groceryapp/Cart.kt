@@ -3,6 +3,7 @@ package com.example.groceryapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +24,7 @@ import org.json.JSONObject
 class Cart : AppCompatActivity(), CartItemOnClickListener{
 
     //initialise product array list
-    val userCartList = ArrayList<CartItem>()
+    var userCartList = ArrayList<CartItem>()
     val adapter = CartItemAdapter(this,userCartList,this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +36,8 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             finish()
         }
 
-        //read from database
-        readCart()
+        //read the cart items from database
+        userCartList = readCart()
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
@@ -47,7 +48,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
     }
 
-    private fun readCart() {
+    private fun readCart():ArrayList<CartItem> {
         //read from database
         val url = getString(R.string.url_server) + getString(R.string.url_read_cart)
         val cartamount: TextView = findViewById(R.id.cartamount)
@@ -94,13 +95,14 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
 
+        return userCartList;
     }
 
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
     override fun addQtyClicked(itemData: CartItem, position:Int) {
         itemData.productQty += 1
         adapter.notifyItemChanged(position)
-        Log.e("qtyCHANGES", itemData.productQty.toString())
+        Log.e("cart changes", itemData.productQty.toString())
     }
 
     override fun minusQtyClicked(itemData: CartItem, position:Int) {
@@ -112,7 +114,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             itemData.productQty -= 1
         }
         adapter.notifyItemChanged(position)
-        Log.e("qtyCHANGES", itemData.productQty.toString())
+        Log.e("cart changes", itemData.productQty.toString())
     }
 
 
