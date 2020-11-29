@@ -89,58 +89,55 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         }
         else{
             //step2: write to database(cart section), update cart item :)
-            insertCart(item)
+            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/writetodatabase.php/" + "?product_name=" + item.product_name +
+                    "&quantity=" + item.productQty + "&cart_id=" + item.cart_id + "&product_img=" + item.product_img +
+                    "&product_price=" + item.product_price
+            val jsonObjectRequest = JsonObjectRequest(
+                    Request.Method.POST, url, null,
+                    Response.Listener { response ->
+                        // Process the JSON
+                        try{
+                            if(response != null){
+                                val strResponse = response.toString()
+                                val jsonResponse  = JSONObject(strResponse)
+                                val success: String = jsonResponse.get("success").toString()
+
+                                if(success == "1"){
+                                    Toast.makeText(context, item.product_name + " added to cart", Toast.LENGTH_LONG).show()
+
+                                }else{
+                                    Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
+                                }
+
+                            }
+                        }catch (e:Exception){
+                            Log.d("Main", "Response: %s".format(e.message.toString()))
+
+                        }
+                    },
+                    Response.ErrorListener { error ->
+                        Log.d("Main", "Response: %s".format(error.message.toString()))
+
+                    })
+
+            //Volley request policy, only one time request
+            jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                    0, //no retry
+                    1f
+            )
+
+            // Access the RequestQueue through your singleton class.
+            MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
+        }
+
+
             Toast.makeText(context, item.product_name + " adding to cart", Toast.LENGTH_LONG).show()
+
+
             //step3: write to database(product section), update stock amount
         }
 
 
 
     }
-
-    private fun insertCart(item:CartItem) {
-        val url = R.string.url_server.toString() + R.string.url_insert_cart.toString() + "?product_name=" + item.product_name +
-                "&quantity=" + item.productQty + "&cart_id=" + item.cart_id + "&product_img=" + item.product_img +
-                "&product_price=" + item.product_price
-
-        val jsonObjectRequest = JsonObjectRequest(
-                Request.Method.GET, url, null,
-                Response.Listener { response ->
-                    // Process the JSON
-                    try{
-                        if(response != null){
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
-
-                            if(success == "1"){
-                                Toast.makeText(context, item.product_name + " added to cart", Toast.LENGTH_LONG).show()
-
-                            }else{
-                                Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
-                            }
-
-                        }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
-
-
-                    }
-                },
-                Response.ErrorListener { error ->
-                    Log.d("Main", "Response: %s".format(error.message.toString()))
-
-                })
-
-        //Volley request policy, only one time request
-        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                0, //no retry
-                1f
-        )
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
-    }
-
-}

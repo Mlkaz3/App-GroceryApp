@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
-class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<CartItem>): RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
+class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<CartItem>,private val itemOnClickListener: CartItemOnClickListener): RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
 
     //declare a context
     var context: Context = contexts
@@ -26,7 +27,9 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
         val img: ImageView = itemView.findViewById(R.id.imageView)
         val title: TextView = itemView.findViewById(R.id.product_cart)
         val price: TextView = itemView.findViewById(R.id.price_cart)
-        val qty:TextView = itemView.findViewById(R.id.qty)
+        var qty:TextView = itemView.findViewById(R.id.qty)
+        val addButton: Button = itemView.findViewById(R.id.buttonAdd)
+        val minusButton: Button = itemView.findViewById(R.id.buttonMinus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
@@ -37,15 +40,25 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
     override fun getItemCount() = cartItemList.size
 
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
+        //getting the current item
         val currentItem = cartItemList[position]
+
+        //load img of the current item using picasso
         Picasso.with(context).load(currentItem.product_img).into(holder.img)
-        Picasso.with(context).isLoggingEnabled = true
+
+        //load the tittle, price and qty of current item in arrayList
         holder.title.text = currentItem.product_name
         holder.price.text = "RM" + df.format(currentItem.product_price).toString()
+        holder.qty.text = currentItem.productQty.toString()
 
-        //not sure how to deal wth qty yet
+        //add button onclick listener
+        holder.addButton.setOnClickListener {
+            itemOnClickListener.addQtyClicked(currentItem,position)
+        }
 
+        //subtract button onclick listener
+        holder.minusButton.setOnClickListener {
+            itemOnClickListener.minusQtyClicked(currentItem,position)
+        }
     }
-
-
 }
