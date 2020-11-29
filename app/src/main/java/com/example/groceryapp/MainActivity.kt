@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+//import com.example.groceryapp.Utils.LoginActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,8 +15,9 @@ class MainActivity : AppCompatActivity() {
 
         val profileButton:ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener{
-            //startActivity(Intent(this, ::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
+
 
         val recipeButton:ImageButton = findViewById(R.id.recipeButton)
         recipeButton.setOnClickListener{
