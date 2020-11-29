@@ -39,9 +39,6 @@ class ShopNow : AppCompatActivity()  {
         adapter = ProductAdapter(this)
         adapter.setProducts(productlist)
 
-        val picassoBuilder = Picasso.Builder(this)
-        val picasso = picassoBuilder.build()
-
         //read product from database
         readProduct()
 
