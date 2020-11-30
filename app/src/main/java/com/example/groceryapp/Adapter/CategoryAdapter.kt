@@ -27,11 +27,11 @@ class CategoryAdapter(contexts: Context): RecyclerView.Adapter<CategoryAdapter.C
 
     //to hold one single view only
     inner class CategoryViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val img: ImageView = itemView.findViewById(R.id.image_product)
-        val title: TextView = itemView.findViewById(R.id.product_title)
-        val stock: TextView = itemView.findViewById(R.id.stock)
-        val price: TextView = itemView.findViewById(R.id.price)
-        val buttonAddCart: Button = itemView.findViewById(R.id.buttonAddCart)
+        val img: ImageView = itemView.findViewById(R.id.img)
+        val title: TextView = itemView.findViewById(R.id.name)
+        val stock: TextView = itemView.findViewById(R.id.productStock)
+        val price: TextView = itemView.findViewById(R.id.productPrice)
+        val buttonAddCart: Button = itemView.findViewById(R.id.addCartButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryAdapter.CategoryViewHolder {
