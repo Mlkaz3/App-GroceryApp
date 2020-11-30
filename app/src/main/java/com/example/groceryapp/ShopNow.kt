@@ -52,6 +52,14 @@ class ShopNow : AppCompatActivity()  {
             startActivity(Intent(this, Cart::class.java))
         }
 
+        val i = Intent(applicationContext, Category::class.java)
+        val fruitButton: ImageButton = findViewById(R.id.imageButtonFruits)
+        fruitButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "fruit")
+            startActivity(i)
+            startActivity(Intent(this, Category::class.java))
+        }
+
         //access recyclerview UI
         val recyclerview:RecyclerView = findViewById(R.id.topProduct)
         recyclerview.adapter = adapter
