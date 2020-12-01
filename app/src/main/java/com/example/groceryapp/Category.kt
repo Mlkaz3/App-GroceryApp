@@ -92,7 +92,7 @@ class Category : AppCompatActivity() {
                             val size: Int = jsonArray.length()
                             for(i in 0.until(size)){
                                 var jsonProduct: JSONObject = jsonArray.getJSONObject(i)
-                                var product: Product = Product(jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
+                                var product: Product = Product(jsonProduct.getInt("product_id"),jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
                                         jsonProduct.getInt("product_stock"))
                                 Log.e("read category",jsonProduct.toString())
                                 productlist.add(product)

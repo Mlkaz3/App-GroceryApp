@@ -66,6 +66,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
             holder.stock.text = "Out of Stock"
         }
         holder.price.text = "RM" + df.format(currentItem.productPrice).toString()
+
         //when the user press add to cart button, called AddCart function
         holder.buttonAddCart.setOnClickListener {
             //step0: retrieve the value and store it in a local variable
@@ -73,31 +74,26 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
             var image = products[position].productImage
             var price = products[position].productPrice
             var stock = products[position].productStock
+            var category = products[position].productCategory
+            var id = products[position].productID
             //things to be added into cart
-            var item:CartItem = CartItem(1,name,"customer1cart",price,image)
+            var item: CartItem = CartItem(1,Product(id,name,price,category,image,stock))
 
             if(stock<=0){
                 Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
             }else{
-                AddCart(item)
+
             }
         }
     }
 
     //AddCart function
     fun AddCart(item: CartItem){
-            //step1: add to local cart
-            //idk how to add eh omg
-
-
-            Toast.makeText(context, "Successfully Added", Toast.LENGTH_LONG).show()
-
-            //step2: write to database(cart section), update cart item :)
-            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/writetodatabase.php/" + "?product_name=" + item.product_name +
-                    "&quantity=" + item.productQty + "&cart_id=" + item.cart_id + "&product_img=" + item.product_img +
-                    "&product_price=" + item.product_price
+            //step1: write to database(cart section), update cart item :)
+            //url need to add in the string ?product_id = XX
+            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?"
             val jsonObjectRequest = JsonObjectRequest(
-                    Request.Method.POST, url, null,
+                    Request.Method.GET, url, null,
                     Response.Listener { response ->
                         // Process the JSON
                         try{
@@ -107,7 +103,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
                                 val success: String = jsonResponse.get("success").toString()
 
                                 if(success == "1"){
-                                    Toast.makeText(context, item.product_name + " added to cart", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, item.productInfo.productName + " added to cart", Toast.LENGTH_LONG).show()
 
                                 }else{
                                     Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
@@ -136,7 +132,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         }
 
             //step3: write to database(product section), update stock amount
-        }
+}
 
 
 

@@ -52,6 +52,9 @@ class ShopNow : AppCompatActivity()  {
             startActivity(Intent(this, Cart::class.java))
         }
 
+
+
+        //reading the category recycler view
         val i = Intent(applicationContext, Category::class.java)
         //user choose fruit
         val fruitButton: ImageButton = findViewById(R.id.imageButtonFruits)
@@ -105,7 +108,7 @@ class ShopNow : AppCompatActivity()  {
                         val size: Int = jsonArray.length()
                         for(i in 0.until(size)){
                             var jsonProduct: JSONObject = jsonArray.getJSONObject(i)
-                            var product: Product = Product(jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
+                            var product: Product = Product(jsonProduct.getInt("product_id"),jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
                                     jsonProduct.getInt("product_stock"))
 
                             productlist.add(product)

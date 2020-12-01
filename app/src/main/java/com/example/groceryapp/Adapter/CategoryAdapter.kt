@@ -66,8 +66,10 @@ class CategoryAdapter(contexts: Context): RecyclerView.Adapter<CategoryAdapter.C
             var image = products[position].productImage
             var price = products[position].productPrice
             var stock = products[position].productStock
+            var category = products[position].productCategory
+            var id = products[position].productID
             //things to be added into cart
-            var item: CartItem = CartItem(1,name,"customer1cart",price,image)
+            var item: CartItem = CartItem(1, Product(id,name,price,category,image,stock))
 
             if(stock<=0){
                 Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
