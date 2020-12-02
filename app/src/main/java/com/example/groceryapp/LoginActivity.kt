@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
     var ed_password: EditText? = null
     var str_email: String? = null
     var str_password: String? = null
-    var url = "https://arsltechmysql.000webhostapp.com/login.php"
+    var url = "https://homies4life.000webhostapp.com/login.php"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -55,6 +55,18 @@ class LoginActivity : AppCompatActivity() {
             ) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
+
+
+
+
+
+
+
+
+
+
+
+
                     val params: MutableMap<String, String> = HashMap()
                     params["email"] = str_email!!
                     params["password"] = str_password!!
