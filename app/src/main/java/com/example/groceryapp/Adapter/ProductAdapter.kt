@@ -126,8 +126,6 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         // Add the request to the RequestQueue.
         MySingleton.getInstance(context).addToRequestQueue(stringRequest)
 
-
-
 //        val jsonObjectRequest = JsonObjectRequest(
 //                    Request.Method.GET, url, null,
 //                    Response.Listener { response ->

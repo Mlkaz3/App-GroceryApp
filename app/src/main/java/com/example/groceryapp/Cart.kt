@@ -26,6 +26,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
     //initialise product array list
     var userCartList = ArrayList<CartItem>()
     val adapter = CartItemAdapter(this,userCartList,this)
+    var subtotalCal:Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +39,15 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
         //read the cart items from database
         readCart()
+        Log.e("winnie","read Cart() is running")
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
-
         recyclerview.adapter = adapter
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerview.setHasFixedSize(true)
+
+
 
     }
 
@@ -68,12 +71,39 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
                             var cartitem: CartItem = CartItem(jsonCartItem.getInt("qty"),Product(jsonCartItem.getInt("product_id"),jsonCartItem.getString("product_name"),jsonCartItem.getDouble("product_price"),
                                     jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
-                                    jsonCartItem.getInt("product_stock")))
-
+                                    jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
+                            Log.e("winnie",cartitem.toString())
                             userCartList.add(cartitem)
+                            subtotalCal += cartitem.subtotal
+                            Log.e("winnie",subtotalCal.toString())
                         }
                         Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
                         cartamount.text = "$size total items"
+
+                        //accessing ui
+                        val subtotal:TextView = findViewById(R.id.subtotal)
+                        val shipping:TextView = findViewById(R.id.shipping)
+                        val total:TextView = findViewById(R.id.total)
+
+                        //calculation variable
+                        var shippingCal:Double =0.0
+                        var totalCal:Double =0.0
+
+                        //perform simple calculation
+                        if(subtotalCal >80){
+                            //free shipping fees
+                            totalCal = subtotalCal
+                        }
+                        else{
+                            shippingCal = 10.0
+                            totalCal = shippingCal + subtotalCal
+                        }
+
+                        subtotal.text = subtotalCal.toString()
+                        shipping.text = shippingCal.toString()
+                        total.text = totalCal.toString()
+
+
                     }
                 }catch (e:Exception){
                     Log.d("Main", "Response: %s".format(e.message.toString()))
@@ -95,8 +125,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
-
-        //return userCartList;
     }
 
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
