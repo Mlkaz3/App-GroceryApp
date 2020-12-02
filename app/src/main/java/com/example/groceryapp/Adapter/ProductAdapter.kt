@@ -1,5 +1,7 @@
 package com.example.groceryapp.Adapter
 
+import android.R.attr.password
+import android.accounts.AccountManager.KEY_PASSWORD
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,10 +16,12 @@ import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.example.groceryapp.Model.CartItem
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.groceryapp.Model.Product
 import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
+import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
 
@@ -77,25 +81,29 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
             var category = products[position].productCategory
             var id = products[position].productID
             //things to be added into cart
-            var item: CartItem = CartItem(1,Product(id,name,price,category,image,stock))
+            var product: Product = Product(id,name,price,category,image,stock)
 
             if(stock<=0){
                 Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
             }else{
-
+                AddCart(product)
             }
         }
     }
 
-    //AddCart function
-    fun AddCart(item: CartItem){
+    //AddCart function it works!! but sadly cant read from database
+    fun AddCart(product: Product){
+        Log.e("Database", "opening")
             //step1: write to database(cart section), update cart item :)
             //url need to add in the string ?product_id = XX
-            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?"
-            val jsonObjectRequest = JsonObjectRequest(
+            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
+        val jsonObjectRequest = JsonObjectRequest(
                     Request.Method.GET, url, null,
                     Response.Listener { response ->
+                        Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+
                         // Process the JSON
+                        Log.e("Check response", response.toString())
                         try{
                             if(response != null){
                                 val strResponse = response.toString()
@@ -103,7 +111,7 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
                                 val success: String = jsonResponse.get("success").toString()
 
                                 if(success == "1"){
-                                    Toast.makeText(context, item.productInfo.productName + " added to cart", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
 
                                 }else{
                                     Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
@@ -129,9 +137,13 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
 
             // Access the RequestQueue through your singleton class.
             MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
+
+        Log.e("Database", "ending")
         }
 
-            //step3: write to database(product section), update stock amount
+
+
+
 }
 
 

@@ -37,7 +37,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         }
 
         //read the cart items from database
-        userCartList = readCart()
+        readCart()
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
@@ -48,10 +48,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
     }
 
-    private fun readCart():ArrayList<CartItem> {
-        //read from database
-        //val url = getString(R.string.url_server) + getString(R.string.url_read_cart)
-
+    private fun readCart() {
         //this code is use to read user 1 cart, where cart_id = 1
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/readusercart.php?cart_id=1"
         val cartamount: TextView = findViewById(R.id.cartamount)
@@ -99,7 +96,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
 
-        return userCartList;
+        //return userCartList;
     }
 
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
