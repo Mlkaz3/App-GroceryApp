@@ -52,6 +52,37 @@ class ShopNow : AppCompatActivity()  {
             startActivity(Intent(this, Cart::class.java))
         }
 
+
+
+        //reading the category recycler view
+        val i = Intent(applicationContext, Category::class.java)
+        //user choose fruit
+        val fruitButton: ImageButton = findViewById(R.id.imageButtonFruits)
+        fruitButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "fruit")
+            startActivity(i)
+        }
+        val vegetableButton: ImageButton = findViewById(R.id.imageButtonVegetable)
+        vegetableButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "vegetable")
+            startActivity(i)
+        }
+        val seafoodButton: ImageButton = findViewById(R.id.imageButtonSeafood)
+        seafoodButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "seafood")
+            startActivity(i)
+        }
+        val chickenButton: ImageButton = findViewById(R.id.imageButtonChicken)
+        chickenButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "chicken")
+            startActivity(i)
+        }
+        val eggButton: ImageButton = findViewById(R.id.imageButtonEggs)
+        eggButton.setOnClickListener {
+            i.putExtra("categoryChoosen", "egg")
+            startActivity(i)
+        }
+
         //access recyclerview UI
         val recyclerview:RecyclerView = findViewById(R.id.topProduct)
         recyclerview.adapter = adapter
@@ -77,8 +108,8 @@ class ShopNow : AppCompatActivity()  {
                         val size: Int = jsonArray.length()
                         for(i in 0.until(size)){
                             var jsonProduct: JSONObject = jsonArray.getJSONObject(i)
-                            var product: Product = Product(jsonProduct.getString("product_img"),jsonProduct.getString("product_name"), jsonProduct.getString("product_category"),
-                                jsonProduct.getDouble("product_price"),jsonProduct.getInt("product_stock"))
+                            var product: Product = Product(jsonProduct.getInt("product_id"),jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
+                                    jsonProduct.getInt("product_stock"))
 
                             productlist.add(product)
                         }

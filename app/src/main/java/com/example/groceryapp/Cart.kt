@@ -37,7 +37,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         }
 
         //read the cart items from database
-        userCartList = readCart()
+        readCart()
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
@@ -48,9 +48,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
     }
 
-    private fun readCart():ArrayList<CartItem> {
-        //read from database
-        val url = getString(R.string.url_server) + getString(R.string.url_read_cart)
+    private fun readCart() {
+        //this code is use to read user 1 cart, where cart_id = 1
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/readusercart.php?cart_id=1"
         val cartamount: TextView = findViewById(R.id.cartamount)
 
         val jsonObjectRequest = JsonObjectRequest(
@@ -61,13 +61,14 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
                     if(response != null){
                         val strResponse = response.toString()
                         val jsonResponse  = JSONObject(strResponse)
-                        val jsonArray: JSONArray = jsonResponse.getJSONArray("cartitems")
+                        val jsonArray: JSONArray = jsonResponse.getJSONArray("cart1")
                         val size: Int = jsonArray.length()
                         for(i in 0.until(size)){
                             var jsonCartItem: JSONObject = jsonArray.getJSONObject(i)
-                            var cartitem: CartItem = CartItem(jsonCartItem.getInt("quantity"),jsonCartItem.getString("product_name"),
-                                    jsonCartItem.getString("cart_id"), jsonCartItem.getDouble("product_price"),
-                                    jsonCartItem.getString("product_img"))
+
+                            var cartitem: CartItem = CartItem(jsonCartItem.getInt("qty"),Product(jsonCartItem.getInt("product_id"),jsonCartItem.getString("product_name"),jsonCartItem.getDouble("product_price"),
+                                    jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
+                                    jsonCartItem.getInt("product_stock")))
 
                             userCartList.add(cartitem)
                         }
@@ -95,7 +96,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
 
-        return userCartList;
+        //return userCartList;
     }
 
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
@@ -103,6 +104,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         itemData.productQty += 1
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
+
+        //write the value to database
+        updateQty(itemData)
     }
 
     override fun minusQtyClicked(itemData: CartItem, position:Int) {
@@ -115,7 +119,43 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         }
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
+
+        //write the value to database
+        updateQty(itemData)
     }
 
+    //WORKING, BUT IF READ FROM DATABASE IS NOT UPDATE THEN HERE CONSIDER AS BUG
+    fun updateQty(itemData: CartItem){
+        //write to database(cart section), update cart item qty
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=1&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.GET, url, null,
+                Response.Listener { response ->
+                    // Process the JSON
+                    try{
+                        if(response != null){
+                            Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
 
+                        }
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
+
+                    }
+                },
+                Response.ErrorListener { error ->
+                    Log.d("Main", "Response: %s".format(error.message.toString()))
+
+                })
+
+        //Volley request policy, only one time request
+        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                0, //no retry
+                1f
+        )
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
+    }
 }
+

@@ -44,11 +44,11 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
         val currentItem = cartItemList[position]
 
         //load img of the current item using picasso
-        Picasso.with(context).load(currentItem.product_img).into(holder.img)
+        Picasso.with(context).load(currentItem.productInfo.productImage).into(holder.img)
 
         //load the tittle, price and qty of current item in arrayList
-        holder.title.text = currentItem.product_name
-        holder.price.text = "RM" + df.format(currentItem.product_price).toString()
+        holder.title.text = currentItem.productInfo.productName
+        holder.price.text = "RM" + df.format(currentItem.productInfo.productPrice).toString()
         holder.qty.text = currentItem.productQty.toString()
 
         //add button onclick listener
