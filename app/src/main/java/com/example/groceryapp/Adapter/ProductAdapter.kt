@@ -92,56 +92,86 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
     }
 
     //AddCart function it works!! but sadly cant read from database
+    //success and the toast work too
     fun AddCart(product: Product){
         Log.e("Database", "opening")
             //step1: write to database(cart section), update cart item :)
             //url need to add in the string ?product_id = XX
-            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
-        val jsonObjectRequest = JsonObjectRequest(
-                    Request.Method.GET, url, null,
-                    Response.Listener { response ->
-                        Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
 
-                        // Process the JSON
-                        Log.e("Check response", response.toString())
-                        try{
-                            if(response != null){
-                                val strResponse = response.toString()
-                                val jsonResponse  = JSONObject(strResponse)
-                                val success: String = jsonResponse.get("success").toString()
+        val stringRequest = StringRequest(Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    try{
+                        if(response != null){
+                            val strResponse = response.toString()
+                            val jsonResponse  = JSONObject(strResponse)
+                            val success: String = jsonResponse.get("success").toString()
 
-                                if(success == "1"){
-                                    Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+                            if(success == "1"){
+                                Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
 
-                                }else{
-                                    Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
-                                }
-
+                            }else{
+                                Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
                             }
-                        }catch (e:Exception){
-                            Log.d("Main", "Response: %s".format(e.message.toString()))
 
                         }
-                    },
-                    Response.ErrorListener { error ->
-                        Log.d("Main", "Response: %s".format(error.message.toString()))
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
 
-                    })
+                    }
 
-            //Volley request policy, only one time request
-            jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                    0, //no retry
-                    1f
-            )
+                },
+                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
 
-            // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(context).addToRequestQueue(stringRequest)
+
+
+
+//        val jsonObjectRequest = JsonObjectRequest(
+//                    Request.Method.GET, url, null,
+//                    Response.Listener { response ->
+//                        Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+//
+//                        // Process the JSON
+//                        Log.e("Check response", response.toString())
+//                        try{
+//                            if(response != null){
+//                                val strResponse = response.toString()
+//                                val jsonResponse  = JSONObject(strResponse)
+//                                val success: String = jsonResponse.get("success").toString()
+//
+//                                if(success == "1"){
+//                                    Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+//
+//                                }else{
+//                                    Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
+//                                }
+//
+//                            }
+//                        }catch (e:Exception){
+//                            Log.d("Main", "Response: %s".format(e.message.toString()))
+//
+//                        }
+//                    },
+//                    Response.ErrorListener { error ->
+//                        Log.d("Main", "Response: %s".format(error.message.toString()))
+//
+//                    })
+//
+//            //Volley request policy, only one time request
+//            jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
+//                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+//                    0, //no retry
+//                    1f
+//            )
+//
+//            // Access the RequestQueue through your singleton class.
+//            MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
 
         Log.e("Database", "ending")
+
         }
-
-
 
 
 }
