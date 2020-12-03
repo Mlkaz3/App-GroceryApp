@@ -21,7 +21,7 @@ class RegistrationActivity : AppCompatActivity() {
     var str_name: String? = null
     var str_email: String? = null
     var str_password: String? = null
-    var url = "https://homies4life.000webhostapp.com/register.php"
+    var url = "https://groceryapptarucproject.000webhostapp.com/grocery/register.php"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)

@@ -20,44 +20,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_margin="15dp"
-            >
+            android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Welcome,"
+                    android:textColor="@android:color/black"
                     android:textSize="28sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
 
 
                     />
+
                 <TextView
                     android:id="@+id/txtsignup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sign Up"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="4dp"
                     android:onClick="moveToRegistration"
-                    />
+
+                    android:text="Sign Up"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
                 android:text="Sign in to Continue"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-light"
 
 
                 />
@@ -66,7 +66,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp">
-
 
 
                 <EditText
@@ -87,15 +86,11 @@
                 <EditText
                     android:id="@+id/ed_password"
                     android:layout_width="match_parent"
-                    android:layout_height="42dp"
+                    android:layout_height="74dp"
                     android:ems="10"
                     android:hint="Password"
-                    android:inputType="textPassword"
-                    />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
 
 
             <Button
@@ -103,13 +98,12 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20dp"
                 android:layout_marginTop="32dp"
                 android:onClick="Login"
                 android:padding="15dp"
                 android:text="Login"
-                />
+                android:textColor="@android:color/white"
+                android:textSize="20dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
