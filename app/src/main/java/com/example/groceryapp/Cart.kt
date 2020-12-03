@@ -1,12 +1,13 @@
 package com.example.groceryapp
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -27,6 +28,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
     var userCartList = ArrayList<CartItem>()
     val adapter = CartItemAdapter(this,userCartList,this)
     var subtotalCal:Double = 0.0
+    var totalCal:Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +39,8 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             finish()
         }
 
-        //read the cart items from database
         readCart()
-        Log.e("winnie","read Cart() is running")
+        Log.e("winnie","read Cart() is running in onStart()")
 
         //access recyclerview UI
         val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
@@ -47,8 +48,23 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerview.setHasFixedSize(true)
 
+        val intent = Intent(this, Checkout::class.java)
 
+        val checkoutButton:Button = findViewById(R.id.checkoutButton)
+        checkoutButton.setOnClickListener {
+            val total:TextView = findViewById(R.id.total)
+            intent.putExtra("amount", total.text)
+            startActivity(intent)
+        }
     }
+
+    //calling the read cart function in onStart()
+//    override fun onStart() {
+//        super.onStart()
+//        //read the cart items from database
+//        readCart()
+//        Log.e("winnie","read Cart() is running in onStart()")
+//    }
 
     //TO DO: override the onResume() method to call this function
     private fun readCart() {
@@ -87,7 +103,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
                         //calculation variable
                         var shippingCal:Double =0.0
-                        var totalCal:Double =0.0
+
 
                         //perform simple calculation
                         if(subtotalCal >80){
@@ -189,5 +205,14 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
+
+    //when user back to cart @onResume(), cannot recall this method, else will top up the price hahaha
+//    override fun onResume() {
+//        super.onResume()
+//        //read the latest cart once again
+//        readCart()
+//        Log.e("winnie","read Cart() is running in onResume()")
+//
+//    }
 }
 

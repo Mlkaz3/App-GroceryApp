@@ -11,14 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp">
-        <activity android:name=".Category"></activity>
+        <activity android:name=".Checkout"></activity>
+        <activity android:name=".Category" />
         <activity android:name=".Recipe" />
         <activity android:name=".Cart" />
         <activity android:name=".ShopNow" />
         <activity android:name=".Website" />
         <activity android:name=".Sales" />
-        <activity android:name=".RegistrationActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
