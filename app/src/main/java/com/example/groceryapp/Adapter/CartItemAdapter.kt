@@ -1,6 +1,7 @@
 package com.example.groceryapp.Adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,13 @@ import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
-class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<CartItem>,private val itemOnClickListener: CartItemOnClickListener): RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
+class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartItemOnClickListener): RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
 
     //declare a context
     var context: Context = contexts
+
+    // Cached copy of user
+    private var cartitems = emptyList<CartItem>()
 
     //round off function
     val df: DecimalFormat = DecimalFormat("0.00")
@@ -37,11 +41,16 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
         return CartItemViewHolder(itemView)
     }
 
-    override fun getItemCount() = cartItemList.size
+    override fun getItemCount() = cartitems.size
+
+    internal fun setProducts(cartitems: List<CartItem>) {
+        this.cartitems = cartitems
+        notifyDataSetChanged()
+    }
 
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         //getting the current item
-        val currentItem = cartItemList[position]
+        val currentItem = cartitems[position]
 
         //load img of the current item using picasso
         Picasso.with(context).load(currentItem.productInfo.productImage).into(holder.img)
@@ -60,5 +69,6 @@ class CartItemAdapter(contexts: Context, private val cartItemList: ArrayList<Car
         holder.minusButton.setOnClickListener {
             itemOnClickListener.minusQtyClicked(currentItem,position)
         }
+
     }
 }

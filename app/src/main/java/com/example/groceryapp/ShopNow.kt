@@ -52,8 +52,6 @@ class ShopNow : AppCompatActivity()  {
             startActivity(Intent(this, Cart::class.java))
         }
 
-
-
         //reading the category recycler view
         val i = Intent(applicationContext, Category::class.java)
         //user choose fruit

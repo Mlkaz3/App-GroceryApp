@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.example.groceryapp.Adapter.CartItemAdapter
 import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
+import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
 import org.json.JSONArray
@@ -24,15 +25,20 @@ import org.json.JSONObject
 
 class Cart : AppCompatActivity(), CartItemOnClickListener{
 
-    //initialise product array list
-    var userCartList = ArrayList<CartItem>()
-    val adapter = CartItemAdapter(this,userCartList,this)
+    //declare product array list
+    lateinit var userCartList:ArrayList<CartItem>
+    lateinit var adapter: CartItemAdapter
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
+
+        //initialise
+        userCartList = ArrayList<CartItem>()
+        adapter = CartItemAdapter(this,this)
+        adapter.setProducts(userCartList)
 
         val backButton: ImageButton = findViewById(R.id.back2)
         backButton.setOnClickListener {
@@ -57,14 +63,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             startActivity(intent)
         }
     }
-
-    //calling the read cart function in onStart()
-//    override fun onStart() {
-//        super.onStart()
-//        //read the cart items from database
-//        readCart()
-//        Log.e("winnie","read Cart() is running in onStart()")
-//    }
 
     //TO DO: override the onResume() method to call this function
     private fun readCart() {
@@ -104,7 +102,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
                         //calculation variable
                         var shippingCal:Double =0.0
 
-
                         //perform simple calculation
                         if(subtotalCal >80){
                             //free shipping fees
@@ -118,13 +115,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
                         subtotal.text = subtotalCal.toString()
                         shipping.text = shippingCal.toString()
                         total.text = totalCal.toString()
-
-
                     }
                 }catch (e:Exception){
                     Log.d("Main", "Response: %s".format(e.message.toString()))
-
-
                 }
             },
             Response.ErrorListener { error ->
@@ -138,7 +131,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             0, //no retry
             1f
         )
-
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
@@ -146,9 +138,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
     override fun addQtyClicked(itemData: CartItem, position:Int) {
         //TO DO: add some code to chg the local variable usercartlist
-
-
-
         itemData.productQty += 1
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
@@ -158,7 +147,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
     }
 
     override fun minusQtyClicked(itemData: CartItem, position:Int) {
-        //if the qty is one then we will remove the whole thing from cart
+        //this adapter we changing the local cart list only
         if(itemData.productQty == 1){
             Toast.makeText(this, "item delete from cart", Toast.LENGTH_LONG).show()
             //how to delete the record in view
@@ -175,7 +164,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
     //WORKING, BUT IF READ FROM DATABASE IS NOT UPDATE THEN HERE CONSIDER AS BUG
     fun updateQty(itemData: CartItem){
         //write to database(cart section), update cart item qty
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=1&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + "1" + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
         val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 Response.Listener { response ->

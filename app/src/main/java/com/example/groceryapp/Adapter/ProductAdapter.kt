@@ -58,6 +58,9 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        //check the local array list empty or not
+        Log.e("winnie", products[0].toString())
+
         val currentItem = products[position]
         Picasso.with(context).load(currentItem.productImage).into(holder.img)
         Picasso.with(context).isLoggingEnabled = true

@@ -6,6 +6,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 class Checkout : AppCompatActivity() {
+
+    lateinit var paymentMethod:String
+    lateinit var deliveryMethod:String
+    lateinit var address:EditText
+    lateinit var notes:EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
@@ -24,6 +30,7 @@ class Checkout : AppCompatActivity() {
                 Toast.makeText(applicationContext,"Payment Choice :"+
                         " ${radio.text}",
                     Toast.LENGTH_SHORT).show()
+                deliveryMethod = "${radio.text}"
             })
 
         //Delivery Radio Group
@@ -34,6 +41,7 @@ class Checkout : AppCompatActivity() {
                 Toast.makeText(applicationContext,"Delivery Choice :"+
                         " ${radio.text}",
                     Toast.LENGTH_SHORT).show()
+                paymentMethod = "${radio.text}"
             })
 
         //Payment Amount Text
@@ -41,8 +49,8 @@ class Checkout : AppCompatActivity() {
         val amount:String? = intent.getStringExtra("amount")
         payment_amount.text = "RM " + amount
 
-        val address:EditText = findViewById(R.id.address)
-        val notes:EditText = findViewById(R.id.note)
+        address = findViewById(R.id.address)
+        notes= findViewById(R.id.note)
 
         //When user click on pay button
         val pay:Button = findViewById(R.id.pay)
@@ -60,5 +68,27 @@ class Checkout : AppCompatActivity() {
 
     private fun writeOrder() {
         Log.e("winnie","write order to database")
+
+        //variable to write tos server
+        var order = (Math.random()*10000000000).toInt()
+        val order_number:String = String.format("%10d",order)
+
+        var delivery = (Math.random()*10000000000).toInt()
+        val delivery_id:String = "D" + String.format("%10d",delivery)
+
+        var payment = (Math.random()*10000000000).toInt()
+        val payment_id:String = "P" + String.format("%10d",payment)
+
+        var user_id = 1
+
+        Log.e("winnie", "order" + order_number)
+        Log.e("winnie", "delivery" + delivery_id)
+        Log.e("winnie", "payment" + payment_id)
+
+        val info:String = "?order_number=$order_number&payment_amount=$delivery_id&payment_method=$paymentMethod"
+        val info1:String = "&delivery_address=$address&user_id$user_id&delivery_id=$delivery_id&payment_id=$payment_id"
+        val url:String = getString(R.string.checkout_url) + info + info1
+
+
     }
 }
