@@ -48,9 +48,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         recyclerview.setHasFixedSize(true)
 
 
-
     }
 
+    //TO DO: override the onResume() method to call this function
     private fun readCart() {
         //this code is use to read user 1 cart, where cart_id = 1
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/readusercart.php?cart_id=1"
@@ -129,6 +129,10 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 
     //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
     override fun addQtyClicked(itemData: CartItem, position:Int) {
+        //TO DO: add some code to chg the local variable usercartlist
+
+
+
         itemData.productQty += 1
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())

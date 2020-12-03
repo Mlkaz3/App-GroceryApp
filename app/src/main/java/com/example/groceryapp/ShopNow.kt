@@ -95,7 +95,6 @@ class ShopNow : AppCompatActivity()  {
     fun readProduct() {
         //read from database
         val url = getString(R.string.url_server) + getString(R.string.url_read_product)
-
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             Response.Listener { response ->

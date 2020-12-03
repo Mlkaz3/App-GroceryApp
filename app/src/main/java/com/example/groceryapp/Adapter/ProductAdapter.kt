@@ -108,6 +108,8 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
                             val success: String = jsonResponse.get("success").toString()
 
                             if(success == "1"){
+                                //TO DO : add into arraylist (OPTIONAL IF DOING onResume())
+
                                 Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
 
                             }else{
