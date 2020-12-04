@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
     var ed_password: EditText? = null
     var str_email: String? = null
     var str_password: String? = null
-    var url = "https://homies4life.000webhostapp.com/login.php"
+    var url = "https://groceryapptarucproject.000webhostapp.com/grocery/login.php"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                 if (response.equals("logged in successfully", ignoreCase = true)) {
                     ed_email!!.setText("")
                     ed_password!!.setText("")
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     Toast.makeText(this@LoginActivity, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@LoginActivity, response, Toast.LENGTH_SHORT).show()
@@ -55,16 +55,6 @@ class LoginActivity : AppCompatActivity() {
             ) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
-
-
-
-
-
-
-
-
-
-
 
 
                     val params: MutableMap<String, String> = HashMap()
