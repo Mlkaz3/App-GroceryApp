@@ -88,6 +88,8 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
                                     jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
                             Log.e("winnie",cartitem.toString())
                             userCartList.add(cartitem)
+                            adapter!!.notifyDataSetChanged()
+
                             subtotalCal += cartitem.subtotal
                             Log.e("winnie",subtotalCal.toString())
                         }

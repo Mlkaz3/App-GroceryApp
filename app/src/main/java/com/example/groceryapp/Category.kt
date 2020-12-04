@@ -96,6 +96,7 @@ class Category : AppCompatActivity() {
                                         jsonProduct.getInt("product_stock"))
                                 Log.e("read category",jsonProduct.toString())
                                 productlist.add(product)
+                                adapter!!.notifyDataSetChanged()
                             }
                             Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
 
