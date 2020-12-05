@@ -171,6 +171,8 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
                 Request.Method.GET, url, null,
                 Response.Listener { response ->
                     // Process the JSON
+                    //it's not giving response here
+                    Log.e("winnie", response.toString())
                     try{
                         if(response != null){
                             Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
