@@ -203,8 +203,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
 //    override fun onResume() {
 //        super.onResume()
 //        //read the latest cart once again
+//        userCartList = ArrayList<CartItem>()
 //        readCart()
-//        Log.e("winnie","read Cart() is running in onResume()")
+//
 //
 //    }
 }

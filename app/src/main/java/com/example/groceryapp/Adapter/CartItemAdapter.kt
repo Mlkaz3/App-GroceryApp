@@ -63,11 +63,15 @@ class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartIte
         //add button onclick listener
         holder.addButton.setOnClickListener {
             itemOnClickListener.addQtyClicked(currentItem,position)
+
+
         }
 
         //subtract button onclick listener
         holder.minusButton.setOnClickListener {
             itemOnClickListener.minusQtyClicked(currentItem,position)
+
+
         }
 
     }
