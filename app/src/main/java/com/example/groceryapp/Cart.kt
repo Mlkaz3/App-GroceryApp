@@ -35,24 +35,10 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        //initialise
-        userCartList = ArrayList<CartItem>()
-        adapter = CartItemAdapter(this,this)
-        adapter.setProducts(userCartList)
-
         val backButton: ImageButton = findViewById(R.id.back2)
         backButton.setOnClickListener {
             finish()
         }
-
-        readCart()
-        Log.e("winnie","read Cart() is running in onStart()")
-
-        //access recyclerview UI
-        val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
-        recyclerview.adapter = adapter
-        recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-        recyclerview.setHasFixedSize(true)
 
         val intent = Intent(this, Checkout::class.java)
 
@@ -62,7 +48,36 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             intent.putExtra("amount", total.text)
             startActivity(intent)
         }
+
+        //read latest cart
+        val refreshButton:ImageButton = findViewById(R.id.refresh)
+        refreshButton.setOnClickListener {
+            Toast.makeText(applicationContext, "Refreshed.", Toast.LENGTH_LONG).show()
+
+        }
+
+        //perform calculation
     }
+
+
+    override fun onResume(){
+        super.onResume()
+
+        //initialise
+        userCartList = ArrayList<CartItem>()
+        adapter = CartItemAdapter(this,this)
+        adapter.setProducts(userCartList)
+
+        readCart()
+
+        //access recyclerview UI
+        val recyclerview: RecyclerView = findViewById(R.id.cart_rv)
+        recyclerview.adapter = adapter
+        recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+        recyclerview.setHasFixedSize(true)
+
+    }
+
 
     //TO DO: override the onResume() method to call this function
     private fun readCart() {
@@ -198,6 +213,9 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
+
+
+
 
     //when user back to cart @onResume(), cannot recall this method, else will top up the price hahaha
 //    override fun onResume() {
