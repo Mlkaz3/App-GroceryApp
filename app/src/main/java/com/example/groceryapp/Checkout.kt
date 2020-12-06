@@ -1,13 +1,10 @@
 package com.example.groceryapp
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
@@ -21,8 +18,10 @@ import java.time.format.FormatStyle
 
 class Checkout : AppCompatActivity() {
 
-    lateinit var paymentMethod:String
-    lateinit var deliveryMethod:String
+    //initialise based on UI
+     var paymentMethod:String = "e-wallet"
+     var deliveryMethod:String = "Poslaju"
+
     lateinit var address:EditText
     lateinit var notes:EditText
     lateinit var amount:String
@@ -42,24 +41,24 @@ class Checkout : AppCompatActivity() {
         //Delivery Radio Group
         val payment_radio_group:RadioGroup = findViewById(R.id.payment)
         payment_radio_group.setOnCheckedChangeListener(
-            RadioGroup.OnCheckedChangeListener { group, checkedId ->
-                val radio: RadioButton = findViewById(checkedId)
-                Toast.makeText(applicationContext,"Payment Choice :"+
-                        " ${radio.text}",
-                    Toast.LENGTH_SHORT).show()
-                paymentMethod= "${radio.text}"
-            })
+                RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                    val radio: RadioButton = findViewById(checkedId)
+                    Toast.makeText(applicationContext,"Payment Choice :"+
+                            " ${radio.text}",
+                            Toast.LENGTH_SHORT).show()
+                    paymentMethod= "${radio.text}"
+                })
 
         //Delivery Radio Group
         val delivery_radio_group:RadioGroup = findViewById(R.id.delivery)
         delivery_radio_group.setOnCheckedChangeListener(
-            RadioGroup.OnCheckedChangeListener { group, checkedId ->
-                val radio: RadioButton = findViewById(checkedId)
-                Toast.makeText(applicationContext,"Delivery Choice :"+
-                        " ${radio.text}",
-                    Toast.LENGTH_SHORT).show()
-                 deliveryMethod= "${radio.text}"
-            })
+                RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                    val radio: RadioButton = findViewById(checkedId)
+                    Toast.makeText(applicationContext,"Delivery Choice :"+
+                            " ${radio.text}",
+                            Toast.LENGTH_SHORT).show()
+                    deliveryMethod= "${radio.text}"
+                })
 
         //Payment Amount Text
         var payment_amount:TextView = findViewById(R.id.amount)
@@ -93,39 +92,9 @@ class Checkout : AppCompatActivity() {
                 //the cart items have to be clear :)
                 //move the cart items to the orderitems table (do at backend)
                 //get the current date and time to write to database
-                //writeOrder()
-
-                //after user successfully place order, we will display a dialog showing that order have placed successfully.
-                openDialog()
+                writeOrder()
             }
         }
-    }
-
-    private fun openDialog() {
-        // create an alert builder
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("THANK YOU FOR CHOOSING US")
-
-        // set the custom layout
-//        val customLayout: View = layoutInflater.inflate(R.layout.mydialog, null);
-//        builder.setView(customLayout);
-
-        builder.setMessage("You have place an order successfully! Kindly wait for seller to ship your item(s). Have a nice day :)")
-        builder
-                .setPositiveButton(
-                        "OK"
-                ) { dialog, _ -> // When the user click ok button
-                    //close the dialog
-                    dialog.cancel()
-                    //bring the user back to menu
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
-
-        // create and show the alert dialog
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-
     }
 
     //able to write order but can't response to user so far
@@ -141,19 +110,40 @@ class Checkout : AppCompatActivity() {
         //variable to write to server
         var order = (Math.random()*100000000).toInt()
         val order_number:String = String.format("%08d",order)
+        Log.e("winnie",order_number)
 
         var delivery = (Math.random()*100000000).toInt()
         val delivery_id:String = "D" + String.format("%08d",delivery)
+        Log.e("winnie",delivery_id)
 
         var payment = (Math.random()*100000000).toInt()
         val payment_id:String = "P" + String.format("%08d",payment)
+        Log.e("winnie",delivery_id)
+
 
         var user_id = 1
 
         //write order details to database using json
         val info:String = "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertorder.php"+
-                "?order_number=$order_number&payment_amount=$amount" + "&payment_method=$paymentMethod&delivery_address=${address.text}&user_id=$user_id&delivery_id=$delivery_id&payment_id=$payment_id&delivery_method=$deliveryMethod&order_date=$date&order_time=$time&note=${notes.text}"
+                "?order_number=$order_number&payment_amount=$amount" + "&payment_method=$paymentMethod&delivery_address=${address.text}&user_id=$user_id&delivery_id=$delivery_id&payment_id=$payment_id&delivery_method=$deliveryMethod&order_date=$date&order_time=$time"
         Log.e("winnie",info)
+
+        Log.e("winnie",amount)
+        Log.e("winnie",address.text.toString())
+
+        //BUG
+        //if user did not re-choose the radio button, error will be occured
+        //if they re-choose and cause the toast of selection displayed, then there will be no bug :)
+       Log.e("winnie",deliveryMethod)
+       Log.e("winnie",paymentMethod)
+
+
+        //TO BE REMOVE
+//         for testing purpose only
+//        val info:String = "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertorder.php"+
+//                "?order_number=WINNIEYAP&payment_amount=12" + "&payment_method=card&delivery_address=testing_home&user_id=1&delivery_id=WINNIEYAP&payment_id=WINNIEYAP&delivery_method=JNT&order_date=$date&order_time=$time"
+//        Log.e("winnie",info)
+
 
         val stringRequest = StringRequest(Request.Method.GET, info,
                 Response.Listener<String> { response ->
@@ -216,6 +206,7 @@ class Checkout : AppCompatActivity() {
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest1)
+
 
     }
 }

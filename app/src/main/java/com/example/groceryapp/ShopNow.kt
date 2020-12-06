@@ -36,6 +36,10 @@ class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_now)
 
+        //get the card_id from a=main activity
+        val cartID = intent.getStringExtra("cart_id")
+        Log.e("winniecheck",cartID.toString())
+
         //initialise
         productlist = ArrayList<Product>()
         adapter = ProductAdapter(this,this)
@@ -51,7 +55,10 @@ class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
 
         val cartButton: ImageButton = findViewById(R.id.cart)
         cartButton.setOnClickListener {
-            startActivity(Intent(this, Cart::class.java))
+            //enable user to view cart
+            val intent = Intent(baseContext, Cart::class.java)
+            intent.putExtra("cart_id", cartID)
+            startActivity(intent)
         }
 
         //reading the category recycler view
@@ -60,26 +67,31 @@ class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
         val fruitButton: ImageButton = findViewById(R.id.imageButtonFruits)
         fruitButton.setOnClickListener {
             i.putExtra("categoryChoosen", "fruit")
+            i.putExtra("cart_id", cartID.toString())
             startActivity(i)
         }
         val vegetableButton: ImageButton = findViewById(R.id.imageButtonVegetable)
         vegetableButton.setOnClickListener {
             i.putExtra("categoryChoosen", "vegetable")
+            i.putExtra("cart_id", cartID.toString())
             startActivity(i)
         }
         val seafoodButton: ImageButton = findViewById(R.id.imageButtonSeafood)
         seafoodButton.setOnClickListener {
             i.putExtra("categoryChoosen", "seafood")
+            i.putExtra("cart_id", cartID.toString())
             startActivity(i)
         }
         val chickenButton: ImageButton = findViewById(R.id.imageButtonChicken)
         chickenButton.setOnClickListener {
             i.putExtra("categoryChoosen", "chicken")
+            i.putExtra("cart_id", cartID.toString())
             startActivity(i)
         }
         val eggButton: ImageButton = findViewById(R.id.imageButtonEggs)
         eggButton.setOnClickListener {
             i.putExtra("categoryChoosen", "egg")
+            i.putExtra("cart_id", cartID.toString())
             startActivity(i)
         }
 

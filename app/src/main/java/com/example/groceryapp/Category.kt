@@ -31,6 +31,10 @@ class Category : AppCompatActivity() ,ProductItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
+
+        val cartID = intent.getStringExtra("cart_id")
+        Log.e("winniecheck",cartID.toString())
+
         //initialise
         productlist = ArrayList<Product>()
         adapter = CategoryAdapter(this,this)

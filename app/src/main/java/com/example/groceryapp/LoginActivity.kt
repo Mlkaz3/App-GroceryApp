@@ -43,7 +43,15 @@ class LoginActivity : AppCompatActivity() {
                 if (response.equals("logged in successfully", ignoreCase = true)) {
                     ed_email!!.setText("")
                     ed_password!!.setText("")
-                    startActivity(Intent(this, MainActivity::class.java))
+
+                    //read the user cart_id from the server
+
+                    //pass the user cart_id to next activity
+                    var cart_id:Int = 1
+                    val intent = Intent(baseContext, MainActivity::class.java)
+                    intent.putExtra("cart_id", cart_id.toString())
+                    startActivity(intent)
+
                     Toast.makeText(this@LoginActivity, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@LoginActivity, response, Toast.LENGTH_SHORT).show()

@@ -35,6 +35,10 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
+        //get the card_id from a=main activity
+        val cartID = intent.getStringExtra("cart_id")
+        Log.e("winniecheck",cartID.toString())
+
         val backButton: ImageButton = findViewById(R.id.back2)
         backButton.setOnClickListener {
             finish()
