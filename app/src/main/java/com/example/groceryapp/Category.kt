@@ -12,14 +12,16 @@ import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.example.groceryapp.Adapter.CategoryAdapter
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Adapter.ProductAdapter
+import com.example.groceryapp.Adapter.ProductItemOnClickListener
 import com.example.groceryapp.Model.Product
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Category : AppCompatActivity() {
+class Category : AppCompatActivity() ,ProductItemOnClickListener{
 
     //declare product array list
     lateinit var adapter: CategoryAdapter
@@ -31,7 +33,7 @@ class Category : AppCompatActivity() {
 
         //initialise
         productlist = ArrayList<Product>()
-        adapter = CategoryAdapter(this)
+        adapter = CategoryAdapter(this,this)
         adapter.setProducts(productlist)
 
         val backButton: ImageButton = findViewById(R.id.backShopNow)
@@ -123,6 +125,39 @@ class Category : AppCompatActivity() {
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
         Log.e("read category",jsonObjectRequest.toString())
 
+    }
+
+    //only available to send once TT
+    override fun addCartClicked(itemData: Product, position: Int) {
+
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + itemData.productID
+
+        val stringRequest = StringRequest(Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    try{
+                        if(response != null){
+                            val strResponse = response.toString()
+                            val jsonResponse  = JSONObject(strResponse)
+                            val success: String = jsonResponse.get("success").toString()
+
+                            if(success == "1"){
+                                Toast.makeText(this, itemData.productName + " added to cart", Toast.LENGTH_LONG).show()
+
+                            }else{
+                                Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
+                            }
+
+                        }
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
+
+                    }
+
+                },
+                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest)
     }
 
 }

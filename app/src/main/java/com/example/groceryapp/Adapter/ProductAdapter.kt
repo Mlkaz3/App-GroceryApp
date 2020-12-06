@@ -26,7 +26,7 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 
 
-class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(contexts: Context,private var itemOnClickListener:ProductItemOnClickListener): RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
     //declare a context
     var context:Context = contexts
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -74,64 +74,23 @@ class ProductAdapter(contexts: Context): RecyclerView.Adapter<ProductAdapter.Pro
         }
         holder.price.text = "RM" + df.format(currentItem.productPrice).toString()
 
+        //step0: retrieve the value and store it in a local variable
+        var name = products[position].productName
+        var image = products[position].productImage
+        var price = products[position].productPrice
+        var stock = products[position].productStock
+        var category = products[position].productCategory
+        var id = products[position].productID
+        //things to be added into cart
+        var product: Product = Product(id,name,price,category,image,stock)
+
         //when the user press add to cart button, called AddCart function
         holder.buttonAddCart.setOnClickListener {
-            //step0: retrieve the value and store it in a local variable
-            var name = products[position].productName
-            var image = products[position].productImage
-            var price = products[position].productPrice
-            var stock = products[position].productStock
-            var category = products[position].productCategory
-            var id = products[position].productID
-            //things to be added into cart
-            var product: Product = Product(id,name,price,category,image,stock)
-
-            if(stock<=0){
-                Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
-            }else{
-                AddCart(product)
-            }
+            //pass in the product to be add
+            itemOnClickListener.addCartClicked(product,position)
         }
     }
 
-    //AddCart function it works!! but sadly cant read from database
-    //success and the toast work too
-    //ERROR OCURRED: ONLY ABLE TO WRITE ONCE TO DATABASE
-    fun AddCart(product: Product) {
-        Log.e("Database", "opening")
-        //step1: write to database(cart section), update cart item :)
-        //url need to add in the string ?product_id = XX
-
-            val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
-
-            val stringRequest = StringRequest(Request.Method.GET, url,
-                    Response.Listener<String> { response ->
-                        try{
-                            if(response != null){
-                                val strResponse = response.toString()
-                                val jsonResponse  = JSONObject(strResponse)
-                                val success: String = jsonResponse.get("success").toString()
-
-                                if(success == "1"){
-                                    Toast.makeText(context, product.productName + " added to cart", Toast.LENGTH_LONG).show()
-
-                                }else{
-                                    Toast.makeText(context, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
-                                }
-
-                            }
-                        }catch (e:Exception){
-                            Log.d("Main", "Response: %s".format(e.message.toString()))
-
-                        }
-
-                    },
-                    Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
-
-            // Add the request to the RequestQueue.
-            MySingleton.getInstance(context).addToRequestQueue(stringRequest)
-
-    }
 }
 
 

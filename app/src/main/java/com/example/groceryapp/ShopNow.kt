@@ -14,9 +14,11 @@ import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Adapter.ProductAdapter
+import com.example.groceryapp.Adapter.ProductItemOnClickListener
 import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
 import com.squareup.picasso.Picasso
@@ -24,7 +26,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 
-class ShopNow : AppCompatActivity()  {
+class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
 
     //declare product array list
     lateinit var adapter: ProductAdapter
@@ -36,7 +38,7 @@ class ShopNow : AppCompatActivity()  {
 
         //initialise
         productlist = ArrayList<Product>()
-        adapter = ProductAdapter(this)
+        adapter = ProductAdapter(this,this)
         adapter.setProducts(productlist)
 
         //read product from database
@@ -134,6 +136,50 @@ class ShopNow : AppCompatActivity()  {
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
+
+    }
+
+    override fun addCartClicked(itemData: Product, position: Int) {
+        //action to be done when add to cart function is called
+        AddCart(itemData)
+    }
+
+    //AddCart function it works!! but sadly cant read from database
+    //success and the toast work too
+    //ERROR OCURRED: ONLY ABLE TO WRITE ONCE TO DATABASE
+    fun AddCart(product: Product) {
+        Log.e("Database", "opening")
+        //step1: write to database(cart section), update cart item :)
+        //url need to add in the string ?product_id = XX
+
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
+
+        val stringRequest = StringRequest(Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    try{
+                        if(response != null){
+                            val strResponse = response.toString()
+                            val jsonResponse  = JSONObject(strResponse)
+                            val success: String = jsonResponse.get("success").toString()
+
+                            if(success == "1"){
+                                Toast.makeText(this, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+
+                            }else{
+                                Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
+                            }
+
+                        }
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
+
+                    }
+
+                },
+                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest)
 
     }
 

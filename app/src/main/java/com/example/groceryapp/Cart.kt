@@ -55,8 +55,6 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
             Toast.makeText(applicationContext, "Refreshed.", Toast.LENGTH_LONG).show()
 
         }
-
-        //perform calculation
     }
 
 

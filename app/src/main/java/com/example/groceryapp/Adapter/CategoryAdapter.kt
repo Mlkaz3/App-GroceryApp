@@ -15,7 +15,7 @@ import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
-class CategoryAdapter(contexts: Context): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(contexts: Context,private var itemOnClickListener:ProductItemOnClickListener): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
     //declare a context
     var context: Context = contexts
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -59,22 +59,21 @@ class CategoryAdapter(contexts: Context): RecyclerView.Adapter<CategoryAdapter.C
             holder.stock.text = "Out of Stock"
         }
         holder.price.text = "RM" + df.format(currentItem.productPrice).toString()
+
+        //step0: retrieve the value and store it in a local variable
+        var name = products[position].productName
+        var image = products[position].productImage
+        var price = products[position].productPrice
+        var stock = products[position].productStock
+        var category = products[position].productCategory
+        var id = products[position].productID
+        //things to be added into cart
+        var product: Product = Product(id,name,price,category,image,stock)
+
         //when the user press add to cart button, called AddCart function
         holder.buttonAddCart.setOnClickListener {
-            //step0: retrieve the value and store it in a local variable
-            var name = products[position].productName
-            var image = products[position].productImage
-            var price = products[position].productPrice
-            var stock = products[position].productStock
-            var category = products[position].productCategory
-            var id = products[position].productID
-            //things to be added into cart
+            //when the user press add to cart button, called AddCart function
+            itemOnClickListener.addCartClicked(product,position)
 
-
-            if(stock<=0){
-                Toast.makeText(context, "The product is currently out of stock", Toast.LENGTH_LONG).show()
-            }else{
-                Toast.makeText(context, "Successfully Added", Toast.LENGTH_LONG).show()
-            }
         }
     }}
