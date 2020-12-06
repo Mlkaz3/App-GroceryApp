@@ -1,10 +1,13 @@
 package com.example.groceryapp
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
@@ -90,9 +93,39 @@ class Checkout : AppCompatActivity() {
                 //the cart items have to be clear :)
                 //move the cart items to the orderitems table (do at backend)
                 //get the current date and time to write to database
-                writeOrder()
+                //writeOrder()
+
+                //after user successfully place order, we will display a dialog showing that order have placed successfully.
+                openDialog()
             }
         }
+    }
+
+    private fun openDialog() {
+        // create an alert builder
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Thank You for CHOOSING US")
+
+        // set the custom layout
+//        val customLayout: View = layoutInflater.inflate(R.layout.mydialog, null);
+//        builder.setView(customLayout);
+
+        builder.setMessage("You have place an order successfully! Kindly wait for seller to ship your item(s). Have a nice day :)")
+        builder
+                .setPositiveButton(
+                        "OK"
+                ) { dialog, _ -> // When the user click ok button
+                    //close the dialog
+                    dialog.cancel()
+                    //bring the user back to menu
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
+
+
+        // create and show the alert dialog
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
     }
 
     //able to write order but can't response to user so far
