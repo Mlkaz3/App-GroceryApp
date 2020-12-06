@@ -104,7 +104,7 @@ class Checkout : AppCompatActivity() {
     private fun openDialog() {
         // create an alert builder
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Thank You for CHOOSING US")
+        builder.setTitle("THANK YOU FOR CHOOSING US")
 
         // set the custom layout
 //        val customLayout: View = layoutInflater.inflate(R.layout.mydialog, null);
@@ -152,7 +152,7 @@ class Checkout : AppCompatActivity() {
 
         //write order details to database using json
         val info:String = "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertorder.php"+
-                "?order_number=$order_number&payment_amount=$amount" + "&payment_method=$paymentMethod&delivery_address=${address.text}&user_id=$user_id&delivery_id=$delivery_id&payment_id=$payment_id&delivery_method=$deliveryMethod&order_date=$date&order_time=$time"
+                "?order_number=$order_number&payment_amount=$amount" + "&payment_method=$paymentMethod&delivery_address=${address.text}&user_id=$user_id&delivery_id=$delivery_id&payment_id=$payment_id&delivery_method=$deliveryMethod&order_date=$date&order_time=$time&note=${notes.text}"
         Log.e("winnie",info)
 
         val stringRequest = StringRequest(Request.Method.GET, info,

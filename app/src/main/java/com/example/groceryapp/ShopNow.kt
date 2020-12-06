@@ -160,14 +160,16 @@ class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
                         if(response != null){
                             val strResponse = response.toString()
                             val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
 
-                            if(success == "1"){
-                                Toast.makeText(this, product.productName + " added to cart", Toast.LENGTH_LONG).show()
-
-                            }else{
-                                Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
-                            }
+                            Toast.makeText(this, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+//                            val success: String = jsonResponse.get("success").toString()
+//
+//                            if(success == "1"){
+//                                Toast.makeText(this, product.productName + " added to cart", Toast.LENGTH_LONG).show()
+//
+//                            }else{
+//                                Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
+//                            }
 
                         }
                     }catch (e:Exception){
