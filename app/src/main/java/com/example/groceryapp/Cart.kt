@@ -50,6 +50,7 @@ class Cart : AppCompatActivity(), CartItemOnClickListener{
         checkoutButton.setOnClickListener {
             val total:TextView = findViewById(R.id.total)
             intent.putExtra("amount", total.text)
+            intent.putExtra("cart_id", cartID)
             startActivity(intent)
         }
 

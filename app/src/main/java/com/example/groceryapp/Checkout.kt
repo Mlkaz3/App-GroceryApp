@@ -32,6 +32,10 @@ class Checkout : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
 
+        //get the card_id from a=main activity
+        val cartID = intent.getStringExtra("cart_id")
+        Log.e("winniecheck",cartID.toString())
+
         val backButton: ImageButton = findViewById(R.id.back3)
         backButton.setOnClickListener {
             finish()
@@ -108,19 +112,18 @@ class Checkout : AppCompatActivity() {
         var time:String = currentDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
         //variable to write to server
+        //self-generated ID
         var order = (Math.random()*100000000).toInt()
         val order_number:String = String.format("%08d",order)
-        Log.e("winnie",order_number)
 
         var delivery = (Math.random()*100000000).toInt()
         val delivery_id:String = "D" + String.format("%08d",delivery)
-        Log.e("winnie",delivery_id)
 
         var payment = (Math.random()*100000000).toInt()
         val payment_id:String = "P" + String.format("%08d",payment)
-        Log.e("winnie",delivery_id)
 
 
+        //user_id that get from intent
         var user_id = 1
 
         //write order details to database using json
@@ -131,20 +134,14 @@ class Checkout : AppCompatActivity() {
         Log.e("winnie",amount)
         Log.e("winnie",address.text.toString())
 
-        //BUG
+        //BUG (SOLVED)
         //if user did not re-choose the radio button, error will be occured
         //if they re-choose and cause the toast of selection displayed, then there will be no bug :)
        Log.e("winnie",deliveryMethod)
        Log.e("winnie",paymentMethod)
 
-
-        //TO BE REMOVE
-//         for testing purpose only
-//        val info:String = "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertorder.php"+
-//                "?order_number=WINNIEYAP&payment_amount=12" + "&payment_method=card&delivery_address=testing_home&user_id=1&delivery_id=WINNIEYAP&payment_id=WINNIEYAP&delivery_method=JNT&order_date=$date&order_time=$time"
-//        Log.e("winnie",info)
-
-
+        //this part got error
+        //ERROR1: CANT WRITE THE CARTITEMS INTO ORDERITEMS
         val stringRequest = StringRequest(Request.Method.GET, info,
                 Response.Listener<String> { response ->
                     Log.e("winnie", response)
@@ -206,7 +203,6 @@ class Checkout : AppCompatActivity() {
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest1)
-
 
     }
 }
