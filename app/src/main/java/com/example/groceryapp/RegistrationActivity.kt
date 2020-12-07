@@ -57,6 +57,7 @@ class RegistrationActivity : AppCompatActivity() {
                     ed_email!!.setText("")
                     ed_password!!.setText("")
                     Toast.makeText(this@RegistrationActivity, response, Toast.LENGTH_SHORT).show()
+
                 },
                 Response.ErrorListener { error ->
                     progressDialog.dismiss()
