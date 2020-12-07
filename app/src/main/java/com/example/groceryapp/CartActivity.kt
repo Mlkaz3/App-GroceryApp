@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -19,6 +20,7 @@ import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
+import com.example.groceryapp.ViewModel.CartItemViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -30,10 +32,16 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
     lateinit var cartID:String
+    lateinit var array:String
 
+    //onCreate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
+
+        Log.e("Winnie","onCreate")
+        array = "1"
+        Log.e("Winnie",array)
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -62,9 +70,22 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         }
     }
 
+    //onStart()
+    override fun onStart() {
+        super.onStart()
 
-    override fun onResume(){
-        super.onResume()
+        Log.e("Winnie","onStart")
+        array = "The value is now 2"
+        Log.e("Winnie",array)
+
+
+
+
+
+
+
+
+
 
         //initialise
         userCartList = ArrayList<CartItem>()
@@ -81,6 +102,38 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
     }
 
+    //during onPause() the array remains as the updated value, but once it went to onStart, thn it's not update
+    override fun onPause(){
+        super.onPause()
+        Log.e("Winnie",array)
+
+    }
+
+    override fun onResume(){
+        super.onResume()
+        Log.e("Winnie",array)
+    }
+
+    //when user press add to cart
+    //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
+    //BUG: CHANGES MADE HERE WILL NOT STORE INTO THE ARRAY UPSTAIRS
+    //PLANNING: WRITE A FUNCTION AND CALL IT INSIDE THE ONSTART()
+    override fun addQtyClicked(itemData: CartItem, position:Int) {
+        //TO DO: add some code to chg the local variable usercartlist
+        itemData.productQty += 1
+        adapter.notifyItemChanged(position)
+        Log.e("cart changes", itemData.productQty.toString())
+
+        //perform calculation
+
+
+        //write the value to database
+        updateQty(itemData)
+
+        array = "The value should be 3 now"
+        Log.e("Winnie",array)
+
+    }
 
     //TO DO: override the onResume() method to call this function
     private fun readCart() {
@@ -155,19 +208,8 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
 
-    //credit to : https://www.youtube.com/watch?v=vz26K2xrO6I&feature=youtu.be
-    override fun addQtyClicked(itemData: CartItem, position:Int) {
-        //TO DO: add some code to chg the local variable usercartlist
-        itemData.productQty += 1
-        adapter.notifyItemChanged(position)
-        Log.e("cart changes", itemData.productQty.toString())
-
-        //perform calculation
 
 
-        //write the value to database
-        updateQty(itemData)
-    }
 
     override fun minusQtyClicked(itemData: CartItem, position:Int) {
         //this adapter we changing the local cart list only
@@ -223,17 +265,5 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
     }
 
-
-
-
-    //when user back to cart @onResume(), cannot recall this method, else will top up the price hahaha
-//    override fun onResume() {
-//        super.onResume()
-//        //read the latest cart once again
-//        userCartList = ArrayList<CartItem>()
-//        readCart()
-//
-//
-//    }
 }
 

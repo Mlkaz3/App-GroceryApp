@@ -32,7 +32,6 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-
         cartID = intent.getStringExtra("cart_id").toString()
         Log.e("winniecheck",cartID.toString())
 

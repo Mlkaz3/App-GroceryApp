@@ -63,6 +63,8 @@ class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartIte
         //add button onclick listener
         holder.addButton.setOnClickListener {
             itemOnClickListener.addQtyClicked(currentItem,position)
+            Log.e("In the CartItemAdapter",currentItem.productQty.toString())
+
 
 
         }
@@ -75,4 +77,5 @@ class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartIte
         }
 
     }
+
 }
