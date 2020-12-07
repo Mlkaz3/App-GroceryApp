@@ -1,5 +1,7 @@
 package com.example.groceryapp
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +27,7 @@ class CheckoutActivity : AppCompatActivity() {
     lateinit var address:EditText
     lateinit var notes:EditText
     lateinit var amount:String
+    lateinit var order_number:String
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,10 +99,54 @@ class CheckoutActivity : AppCompatActivity() {
                 //the cart items have to be clear :)
                 //move the cart items to the orderitems table (do at backend)
                 //get the current date and time to write to database
+
+                //writeOrder to 3 tables
                 writeOrder()
+
+                updateOrderItem()
+
+                openDialog()
             }
         }
     }
+
+    private fun updateOrderItem() {
+        //update orderitems, remove cartitems
+        //TO DO: TRY TO WRITE TO SERVER
+        //SUCCESS WHILE RUNNING ON SERVER
+        val url:String =  "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertcartitemsintoorderitems.php" +
+                "?order_number=" + order_number  + "&cart_id=1"
+        Log.e("winnie",url)
+
+        val stringRequest1 = StringRequest(Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    Log.e("winnie", response)
+
+                    try{
+                        if(response != null){
+                            val strResponse = response.toString()
+                            val jsonResponse  = JSONObject(strResponse)
+                            val success: String = jsonResponse.get("success").toString()
+
+                            if(success == "1"){
+                                Toast.makeText(this,"Order placed successfully.", Toast.LENGTH_LONG).show()
+
+                            }else{
+                                Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
+                            }
+
+                        }
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
+                    }
+
+                },
+                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+
+        // Add the request to the RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest1)
+    }
+
 
     //able to write order but can't response to user so far
     @RequiresApi(Build.VERSION_CODES.O)
@@ -114,7 +161,7 @@ class CheckoutActivity : AppCompatActivity() {
         //variable to write to server
         //self-generated ID
         var order = (Math.random()*100000000).toInt()
-        val order_number:String = String.format("%08d",order)
+        order_number = String.format("%08d",order)
 
         var delivery = (Math.random()*100000000).toInt()
         val delivery_id:String = "D" + String.format("%08d",delivery)
@@ -169,42 +216,33 @@ class CheckoutActivity : AppCompatActivity() {
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest)
+    }
+
+    private fun openDialog() {
+        // create an alert builder
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Thank You for CHOOSING US")
+
+        // set the custom layout
+//        val customLayout: View = layoutInflater.inflate(R.layout.mydialog, null);
+//        builder.setView(customLayout);
+
+        builder.setMessage("You have place an order successfully! Kindly wait for seller to ship your item(s). Have a nice day :)")
+        builder
+                .setPositiveButton(
+                        "OK"
+                ) { dialog, _ -> // When the user click ok button
+                    //close the dialog
+                    dialog.cancel()
+                    //bring the user back to menu
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
 
 
-        //update orderitems, remove cartitems
-        //TO DO: TRY TO WRITE TO SERVER
-        //SUCCESS WHILE RUNNING ON SERVER
-        val url:String =  "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertcartitemsintoorderitems.php" +
-                "?order_number=" + order_number  + "&user_id=" + user_id
-        Log.e("winnie",url)
-
-        val stringRequest1 = StringRequest(Request.Method.GET, url,
-                Response.Listener<String> { response ->
-                    Log.e("winnie", response)
-
-                    try{
-                        if(response != null){
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
-
-                            if(success == "1"){
-                                Toast.makeText(this,"Order placed successfully.", Toast.LENGTH_LONG).show()
-
-                            }else{
-                                Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
-                            }
-
-                        }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
-                    }
-
-                },
-                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
-
-        // Add the request to the RequestQueue.
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest1)
+        // create and show the alert dialog
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
 
     }
+
 }
