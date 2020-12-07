@@ -26,13 +26,14 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //declare product array list
     lateinit var adapter: CategoryAdapter
     lateinit var productlist: ArrayList<Product>
+    lateinit var cartID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
 
-        val cartID = intent.getStringExtra("cart_id")
+        cartID = intent.getStringExtra("cart_id").toString()
         Log.e("winniecheck",cartID.toString())
 
         //initialise
@@ -134,7 +135,7 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //only available to send once TT
     override fun addCartClicked(itemData: Product, position: Int) {
 
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + itemData.productID
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=" + cartID + "&product_id=" + itemData.productID
 
         val stringRequest = StringRequest(Request.Method.GET, url,
                 Response.Listener<String> { response ->

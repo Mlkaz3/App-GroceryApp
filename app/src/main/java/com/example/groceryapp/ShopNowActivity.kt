@@ -26,14 +26,15 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //declare product array list
     lateinit var adapter: ProductAdapter
     lateinit var productlist: ArrayList<Product>
+    lateinit var cartID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_now)
 
         //get the card_id from a=main activity
-        val cartID = intent.getStringExtra("cart_id")
-        Log.e("winniecheck",cartID.toString())
+        cartID = intent.getStringExtra("cart_id").toString()
+        Log.e("winniecheck",cartID)
 
         //initialise
         productlist = ArrayList<Product>()
@@ -159,7 +160,7 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
         //step1: write to database(cart section), update cart item :)
         //url need to add in the string ?product_id = XX
 
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=1&product_id=" + product.productID + "&qty=1"
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id="  + cartID + "&product_id=" + product.productID
 
         val stringRequest = StringRequest(Request.Method.GET, url,
                 Response.Listener<String> { response ->

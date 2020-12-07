@@ -28,6 +28,7 @@ class CheckoutActivity : AppCompatActivity() {
     lateinit var notes:EditText
     lateinit var amount:String
     lateinit var order_number:String
+    lateinit var cartID: String
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -36,7 +37,7 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_checkout)
 
         //get the card_id from a=main activity
-        val cartID = intent.getStringExtra("cart_id")
+        cartID = intent.getStringExtra("cart_id").toString()
         Log.e("winniecheck",cartID.toString())
 
         val backButton: ImageButton = findViewById(R.id.back3)
@@ -115,7 +116,7 @@ class CheckoutActivity : AppCompatActivity() {
         //TO DO: TRY TO WRITE TO SERVER
         //SUCCESS WHILE RUNNING ON SERVER
         val url:String =  "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertcartitemsintoorderitems.php" +
-                "?order_number=" + order_number  + "&cart_id=1"
+                "?order_number=" + order_number  + "&cart_id=" + cartID
         Log.e("winnie",url)
 
         val stringRequest1 = StringRequest(Request.Method.GET, url,
@@ -218,6 +219,7 @@ class CheckoutActivity : AppCompatActivity() {
         MySingleton.getInstance(this).addToRequestQueue(stringRequest)
     }
 
+    //show user order placed successfully dialog
     private fun openDialog() {
         // create an alert builder
         val builder = AlertDialog.Builder(this)
@@ -234,8 +236,11 @@ class CheckoutActivity : AppCompatActivity() {
                 ) { dialog, _ -> // When the user click ok button
                     //close the dialog
                     dialog.cancel()
-                    //bring the user back to menu
-                    startActivity(Intent(this, MainActivity::class.java))
+                    //bring the user back to menu bringing the cart_id
+
+                    val intent = Intent(baseContext, MainActivity::class.java)
+                    intent.putExtra("cart_id", cartID)
+                    startActivity(intent)
                 }
 
 

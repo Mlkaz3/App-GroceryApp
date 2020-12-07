@@ -29,13 +29,14 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     lateinit var adapter: CartItemAdapter
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
+    lateinit var cartID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
         //get the card_id from a=main activity
-        val cartID = intent.getStringExtra("cart_id")
+        cartID = intent.getStringExtra("cart_id").toString()
         Log.e("winniecheck",cartID.toString())
 
         val backButton: ImageButton = findViewById(R.id.back2)
@@ -84,7 +85,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //TO DO: override the onResume() method to call this function
     private fun readCart() {
         //this code is use to read user 1 cart, where cart_id = 1
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/readusercart.php?cart_id=1"
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/readusercart.php?cart_id=" + cartID
         val cartamount: TextView = findViewById(R.id.cartamount)
 
         val jsonObjectRequest = JsonObjectRequest(
@@ -161,6 +162,9 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
 
+        //perform calculation
+
+
         //write the value to database
         updateQty(itemData)
     }
@@ -176,6 +180,9 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
 
+        //perform calculation
+
+
         //write the value to database
         updateQty(itemData)
     }
@@ -183,7 +190,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //WORKING, BUT IF READ FROM DATABASE IS NOT UPDATE THEN HERE CONSIDER AS BUG
     fun updateQty(itemData: CartItem){
         //write to database(cart section), update cart item qty
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + "1" + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
         val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 Response.Listener { response ->
