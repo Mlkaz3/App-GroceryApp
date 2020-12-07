@@ -21,7 +21,7 @@ import com.example.groceryapp.Model.Product
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Category : AppCompatActivity() ,ProductItemOnClickListener{
+class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
 
     //declare product array list
     lateinit var adapter: CategoryAdapter

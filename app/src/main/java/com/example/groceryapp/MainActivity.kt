@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         //recipe
         val recipeButton:ImageButton = findViewById(R.id.recipeButton)
         recipeButton.setOnClickListener{
-            startActivity(Intent(this, Recipe::class.java))
+            startActivity(Intent(this, RecipeActivity::class.java))
         }
 
         //view cart
@@ -52,14 +52,14 @@ class MainActivity : AppCompatActivity() {
         val salesButton: ImageButton = findViewById(R.id.salesButton)
         salesButton.setOnClickListener{
             //jump to new activity/fragment
-            startActivity(Intent(this, Sales::class.java))
+            startActivity(Intent(this, SalesActivity::class.java))
 
         }
 
         //view website
         val websiteButton:ImageButton = findViewById(R.id.websiteButton)
         websiteButton.setOnClickListener{
-            startActivity(Intent(this, Website::class.java))
+            startActivity(Intent(this, WebsiteActivity::class.java))
         }
 
     }

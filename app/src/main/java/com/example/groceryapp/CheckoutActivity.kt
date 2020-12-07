@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 
-class Checkout : AppCompatActivity() {
+class CheckoutActivity : AppCompatActivity() {
 
     //initialise based on UI
      var paymentMethod:String = "e-wallet"

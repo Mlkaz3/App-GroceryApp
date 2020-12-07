@@ -57,7 +57,7 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
         }
 
         //reading the category recycler view
-        val i = Intent(applicationContext, Category::class.java)
+        val i = Intent(applicationContext, CategoryActivity::class.java)
         //user choose fruit
         val fruitButton: ImageButton = findViewById(R.id.imageButtonFruits)
         fruitButton.setOnClickListener {

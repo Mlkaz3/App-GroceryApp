@@ -17,7 +17,6 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.example.groceryapp.Adapter.CartItemAdapter
 import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
-import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
 import org.json.JSONArray
@@ -44,7 +43,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
             finish()
         }
 
-        val intent = Intent(this, Checkout::class.java)
+        val intent = Intent(this, CheckoutActivity::class.java)
 
         val checkoutButton:Button = findViewById(R.id.checkoutButton)
         checkoutButton.setOnClickListener {
