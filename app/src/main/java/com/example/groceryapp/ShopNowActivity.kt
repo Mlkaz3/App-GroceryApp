@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -16,7 +17,9 @@ import com.android.volley.toolbox.StringRequest
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Adapter.ProductItemOnClickListener
+import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
+import com.example.groceryapp.ViewModel.CartItemViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -26,11 +29,14 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //declare product array list
     lateinit var adapter: ProductAdapter
     lateinit var productlist: ArrayList<Product>
+    lateinit var viewModel: CartItemViewModel
     lateinit var cartID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_now)
+
+        viewModel = ViewModelProviders.of(this)[CartItemViewModel::class.java]
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -156,10 +162,11 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //success and the toast work too
     //ERROR OCURRED: ONLY ABLE TO WRITE ONCE TO DATABASE
     fun AddCart(product: Product) {
-        Log.e("Database", "opening")
-        //step1: write to database(cart section), update cart item :)
-        //url need to add in the string ?product_id = XX
+        //step1: update local database
+        var cartitem:CartItem = CartItem(1,product,product.productPrice)
+        viewModel.localuserCartList.add(cartitem)
 
+        //step2: write to database(cart section), update cart item :)
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id="  + cartID + "&product_id=" + product.productID
 
         val stringRequest = StringRequest(Request.Method.GET, url,

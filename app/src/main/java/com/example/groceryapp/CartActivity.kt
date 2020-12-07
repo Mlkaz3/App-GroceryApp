@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -24,24 +24,23 @@ import com.example.groceryapp.ViewModel.CartItemViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 
+
 class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
     //declare product array list
-    lateinit var userCartList:ArrayList<CartItem>
+    var userCartList:ArrayList<CartItem> = ArrayList<CartItem>()
+    lateinit var viewModel:CartItemViewModel
     lateinit var adapter: CartItemAdapter
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
     lateinit var cartID:String
-    lateinit var array:String
 
     //onCreate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        Log.e("Winnie","onCreate")
-        array = "1"
-        Log.e("Winnie",array)
+        viewModel = ViewModelProviders.of(this)[CartItemViewModel::class.java]
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -68,29 +67,18 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
             Toast.makeText(applicationContext, "Refreshed.", Toast.LENGTH_LONG).show()
 
         }
+
+
     }
 
     //onStart()
     override fun onStart() {
         super.onStart()
 
-        Log.e("Winnie","onStart")
-        array = "The value is now 2"
-        Log.e("Winnie",array)
-
-
-
-
-
-
-
-
-
-
         //initialise
         userCartList = ArrayList<CartItem>()
         adapter = CartItemAdapter(this,this)
-        adapter.setProducts(userCartList)
+        adapter.setProducts(viewModel.localuserCartList)
 
         readCart()
 
@@ -100,18 +88,19 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerview.setHasFixedSize(true)
 
+
     }
 
     //during onPause() the array remains as the updated value, but once it went to onStart, thn it's not update
     override fun onPause(){
         super.onPause()
-        Log.e("Winnie",array)
+        Log.e("check cart size", viewModel.localuserCartList.size.toString())
 
     }
 
     override fun onResume(){
         super.onResume()
-        Log.e("Winnie",array)
+
     }
 
     //when user press add to cart
@@ -124,14 +113,8 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         adapter.notifyItemChanged(position)
         Log.e("cart changes", itemData.productQty.toString())
 
-        //perform calculation
-
-
         //write the value to database
         updateQty(itemData)
-
-        array = "The value should be 3 now"
-        Log.e("Winnie",array)
 
     }
 
@@ -155,11 +138,14 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
                             var jsonCartItem: JSONObject = jsonArray.getJSONObject(i)
 
                             var cartitem: CartItem = CartItem(jsonCartItem.getInt("qty"),Product(jsonCartItem.getInt("product_id"),jsonCartItem.getString("product_name"),jsonCartItem.getDouble("product_price"),
-                                    jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
-                                    jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
-                            Log.e("winnie",cartitem.toString())
+                                jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
+                                jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
+
                             userCartList.add(cartitem)
                             adapter!!.notifyDataSetChanged()
+
+                            viewModel.localuserCartList.add(cartitem)
+                            Log.e("localUserCart",viewModel.localuserCartList[i].toString())
 
                             subtotalCal += cartitem.subtotal
                             Log.e("winnie",subtotalCal.toString())
@@ -206,6 +192,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         )
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
+
     }
 
 
@@ -216,7 +203,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         if(itemData.productQty == 1){
             Toast.makeText(this, "item delete from cart", Toast.LENGTH_LONG).show()
             //how to delete the record in view
-       }else{
+        }else{
             itemData.productQty -= 1
         }
         adapter.notifyItemChanged(position)
@@ -234,31 +221,31 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         //write to database(cart section), update cart item qty
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
         val jsonObjectRequest = JsonObjectRequest(
-                Request.Method.GET, url, null,
-                Response.Listener { response ->
-                    // Process the JSON
-                    //it's not giving response here
-                    Log.e("winnie", response.toString())
-                    try{
-                        if(response != null){
-                            Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
-
-                        }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
+            Request.Method.GET, url, null,
+            Response.Listener { response ->
+                // Process the JSON
+                //it's not giving response here
+                Log.e("winnie", response.toString())
+                try{
+                    if(response != null){
+                        Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
 
                     }
-                },
-                Response.ErrorListener { error ->
-                    Log.d("Main", "Response: %s".format(error.message.toString()))
+                }catch (e:Exception){
+                    Log.d("Main", "Response: %s".format(e.message.toString()))
 
-                })
+                }
+            },
+            Response.ErrorListener { error ->
+                Log.d("Main", "Response: %s".format(error.message.toString()))
+
+            })
 
         //Volley request policy, only one time request
         jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                0, //no retry
-                1f
+            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+            0, //no retry
+            1f
         )
 
         // Access the RequestQueue through your singleton class.
@@ -266,4 +253,3 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     }
 
 }
-
