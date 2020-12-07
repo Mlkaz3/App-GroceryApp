@@ -172,6 +172,8 @@ class Checkout : AppCompatActivity() {
 
 
         //update orderitems, remove cartitems
+        //TO DO: TRY TO WRITE TO SERVER
+        //SUCCESS WHILE RUNNING ON SERVER
         val url:String =  "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertcartitemsintoorderitems.php" +
                 "?order_number=" + order_number  + "&user_id=" + user_id
         Log.e("winnie",url)

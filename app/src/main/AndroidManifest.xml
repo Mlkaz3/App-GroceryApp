@@ -14,8 +14,8 @@
         <activity android:name=".Checkout"></activity>
         <activity android:name=".Category" />
         <activity android:name=".Recipe" />
-        <activity android:name=".Cart" />
-        <activity android:name=".ShopNow" />
+        <activity android:name=".CartActivity" />
+        <activity android:name=".ShopNowActivity" />
         <activity android:name=".Website" />
         <activity android:name=".Sales" />
         <activity android:name=".RegistrationActivity" />

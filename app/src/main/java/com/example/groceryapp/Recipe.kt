@@ -18,12 +18,12 @@ class Recipe : AppCompatActivity() {
         //change the Cart to some other activty later
         val veganRecipe: ImageButton = findViewById(R.id.vegan)
         veganRecipe.setOnClickListener {
-            startActivity(Intent(this, Cart::class.java))
+            startActivity(Intent(this, CartActivity::class.java))
         }
 
         val nonVeganRecipe: ImageButton = findViewById(R.id.nonvegan)
         nonVeganRecipe.setOnClickListener{
-            startActivity(Intent(this, Cart::class.java))
+            startActivity(Intent(this, CartActivity::class.java))
         }
     }
 }

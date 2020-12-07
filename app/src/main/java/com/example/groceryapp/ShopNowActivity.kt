@@ -3,9 +3,7 @@ package com.example.groceryapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,18 +13,15 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
-import com.example.groceryapp.Adapter.CartItemOnClickListener
 import com.example.groceryapp.Adapter.MySingleton
 import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Adapter.ProductItemOnClickListener
-import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
-import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 
 
-class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
+class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
 
     //declare product array list
     lateinit var adapter: ProductAdapter
@@ -56,7 +51,7 @@ class ShopNow : AppCompatActivity() ,ProductItemOnClickListener{
         val cartButton: ImageButton = findViewById(R.id.cart)
         cartButton.setOnClickListener {
             //enable user to view cart
-            val intent = Intent(baseContext, Cart::class.java)
+            val intent = Intent(baseContext, CartActivity::class.java)
             intent.putExtra("cart_id", cartID)
             startActivity(intent)
         }

@@ -23,7 +23,7 @@ import com.example.groceryapp.Model.Product
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Cart : AppCompatActivity(), CartItemOnClickListener{
+class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
     //declare product array list
     lateinit var userCartList:ArrayList<CartItem>

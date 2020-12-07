@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val cartButton:ImageButton = findViewById(R.id.cartButton)
         cartButton.setOnClickListener{
             //pass the user cart id into the cart activities
-            val intent = Intent(baseContext, Cart::class.java)
+            val intent = Intent(baseContext, CartActivity::class.java)
             intent.putExtra("cart_id", cartID)
             startActivity(intent)
         }
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val shopnowButton:ImageButton = findViewById(R.id.shopnowButton)
         shopnowButton.setOnClickListener{
             //pass the user cart id into the shopnow activities
-            val intent = Intent(baseContext, ShopNow::class.java)
+            val intent = Intent(baseContext, ShopNowActivity::class.java)
             intent.putExtra("cart_id", cartID)
             startActivity(intent)
 
