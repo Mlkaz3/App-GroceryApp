@@ -1,5 +1,6 @@
 package com.example.groceryapp.Adapter
 
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groceryapp.Model.CartItem
-import com.example.groceryapp.Model.Product
 import com.example.groceryapp.R
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
@@ -19,7 +19,6 @@ class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartIte
 
     //declare a context
     var context: Context = contexts
-
     // Cached copy of user
     private var cartitems = emptyList<CartItem>()
 
@@ -72,7 +71,6 @@ class CartItemAdapter(contexts: Context,private val itemOnClickListener: CartIte
         //subtract button onclick listener
         holder.minusButton.setOnClickListener {
             itemOnClickListener.minusQtyClicked(currentItem,position)
-
 
         }
 

@@ -31,14 +31,15 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //declare product array list
     lateinit var adapter: ProductAdapter
     lateinit var productlist: ArrayList<Product>
-    lateinit var viewModel: CartItemViewModel
+    var localCartList:GlobalClass = GlobalClass()
     lateinit var cartID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_now)
 
-        viewModel = ViewModelProviders.of(this)[CartItemViewModel::class.java]
+        //log to check the value inside the Global Class
+        Log.e("checkingGlobalClass","")
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -166,6 +167,7 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     fun AddCart(product: Product) {
         //step1: update local database
         var cartitem:CartItem = CartItem(1,product,product.productPrice)
+        localCartList.addItem(cartitem)
 
         //step2: write to database(cart section), update cart item :)
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id="  + cartID + "&product_id=" + product.productID

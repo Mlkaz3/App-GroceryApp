@@ -57,7 +57,6 @@
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="8dp"
-            android:text="3 total items"
             android:textColor="#3B693A" />
 
         <LinearLayout

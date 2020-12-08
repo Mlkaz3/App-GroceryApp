@@ -1,5 +1,6 @@
 package com.example.groceryapp
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,7 @@ import com.example.groceryapp.Model.Product
 import com.example.groceryapp.ViewModel.CartItemViewModel
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.DecimalFormat
 
 
 class CartActivity : AppCompatActivity(), CartItemOnClickListener{
@@ -30,15 +32,20 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //declare product array list
     lateinit var userCartList:ArrayList<CartItem>
     lateinit var adapter: CartItemAdapter
+    var localCartList:GlobalClass = GlobalClass()
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
     lateinit var cartID:String
     lateinit var userID:String
 
+
+
+
     //onCreate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
+
 
 
         //get the card_id from a=main activity
@@ -62,19 +69,6 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
             startActivity(intent)
         }
 
-        //read latest cart
-        val refreshButton:ImageButton = findViewById(R.id.refresh)
-        refreshButton.setOnClickListener {
-            Toast.makeText(applicationContext, "Refreshed.", Toast.LENGTH_LONG).show()
-
-        }
-
-
-    }
-
-    //onStart()
-    override fun onStart() {
-        super.onStart()
 
         //initialise
         userCartList = ArrayList<CartItem>()
@@ -89,17 +83,13 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
         recyclerview.setHasFixedSize(true)
 
+        //read latest cart
+        val refreshButton:ImageButton = findViewById(R.id.refresh)
+        refreshButton.setOnClickListener {
+            Toast.makeText(applicationContext, "Refreshed.", Toast.LENGTH_LONG).show()
 
-    }
+        }
 
-    //during onPause() the array remains as the updated value, but once it went to onStart, thn it's not update
-    override fun onPause(){
-        super.onPause()
-
-    }
-
-    override fun onResume(){
-        super.onResume()
 
     }
 
@@ -115,6 +105,35 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
         //write the value to database
         updateQty(itemData)
+
+        calculationAdd(itemData)
+
+    }
+
+    private fun calculationAdd(itemData: CartItem) {
+        //accessing ui
+        val subtotal:TextView = findViewById(R.id.subtotal)
+        val shipping:TextView = findViewById(R.id.shipping)
+        val total:TextView = findViewById(R.id.total)
+
+        //calculation variable
+        var shippingCal:Double = 0.0
+        subtotalCal += itemData.productInfo.productPrice
+
+        //perform simple calculation
+        if(subtotalCal >80){
+            //free shipping fees
+            totalCal = subtotalCal
+        }
+        else{
+            shippingCal = 10.0
+            totalCal = shippingCal + subtotalCal
+        }
+
+        val df: DecimalFormat = DecimalFormat("0.00")
+        subtotal.text = df.format(subtotalCal).toString()
+        shipping.text = df.format(shippingCal).toString()
+        total.text = df.format(totalCal).toString()
 
     }
 
@@ -194,24 +213,80 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     }
 
 
-
-
     override fun minusQtyClicked(itemData: CartItem, position:Int) {
         //this adapter we changing the local cart list only
         if(itemData.productQty == 1){
-            Toast.makeText(this, "item delete from cart", Toast.LENGTH_LONG).show()
             //how to delete the record in view
+            displayDialog(itemData,position)
         }else{
             itemData.productQty -= 1
+            //perform calculation within the app :)
+            calculationMinus(itemData)
+
+            adapter.notifyItemChanged(position)
+            Log.e("cart changes", itemData.productQty.toString())
+
+            //write the value to database
+            updateQty(itemData)
         }
-        adapter.notifyItemChanged(position)
-        Log.e("cart changes", itemData.productQty.toString())
-
-        //perform calculation
 
 
-        //write the value to database
-        updateQty(itemData)
+    }
+
+    private fun displayDialog(itemData: CartItem, position:Int) {
+        // create an simple alert builder
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("ALERT!")
+
+        builder.setMessage("Are you sure to remove the" + itemData.productInfo.productName + " item?")
+        builder
+                .setPositiveButton(
+                        "YES"
+                ) { dialog, _ -> // When the user click ok button
+
+                    //delete the item here
+                    //how to remove a item???
+                    userCartList.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                    adapter.notifyItemRangeChanged(position, userCartList.size)
+                    itemData.productQty -= 1
+                    updateQty(itemData)
+
+                    //close the dialog
+                    dialog.cancel()
+                }
+
+        // create and show the alert dialog
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+    }
+
+    private fun calculationMinus(itemData: CartItem) {
+        //accessing ui
+        val subtotal:TextView = findViewById(R.id.subtotal)
+        val shipping:TextView = findViewById(R.id.shipping)
+        val total:TextView = findViewById(R.id.total)
+
+        //calculation variable
+        var shippingCal:Double = 0.0
+        subtotalCal -= itemData.productInfo.productPrice
+
+        //perform simple calculation
+        if(subtotalCal >80){
+            //free shipping fees
+            totalCal = subtotalCal
+        }
+        else{
+            shippingCal = 10.0
+            totalCal = shippingCal + subtotalCal
+        }
+
+        val df: DecimalFormat = DecimalFormat("0.00")
+        subtotal.text = df.format(subtotalCal).toString()
+        shipping.text = df.format(shippingCal).toString()
+        total.text = df.format(totalCal).toString()
+
     }
 
     //WORKING, BUT IF READ FROM DATABASE IS NOT UPDATE THEN HERE CONSIDER AS BUG
