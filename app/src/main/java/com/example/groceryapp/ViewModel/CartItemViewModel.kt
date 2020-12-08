@@ -16,6 +16,7 @@ import com.example.groceryapp.R
 import org.json.JSONArray
 import org.json.JSONObject
 
+//not using ya
 class CartItemViewModel : ViewModel() {
     //Tracks for the local user cart item
      var localuserCartList:ArrayList<CartItem> = ArrayList<CartItem>()
