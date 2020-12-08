@@ -75,6 +75,15 @@ class LoginActivity : AppCompatActivity() {
                                         cartID = jsonCartItem.getString("cart_id")
                                         Log.e("get userID",userID)
                                         Log.e("get cartID",cartID)
+
+
+                                        //pass the user cart_id to next activity
+                                        var cart_id:Int = cartID.toInt()
+                                        val intent = Intent(baseContext, MainActivity::class.java)
+                                        intent.putExtra("cart_id", cart_id.toString())
+                                        startActivity(intent)
+
+
                                     }
                                 }
                             }catch (e:Exception){
@@ -95,12 +104,6 @@ class LoginActivity : AppCompatActivity() {
                     // Access the RequestQueue through your singleton class.
                     MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
 
-
-                    //pass the user cart_id to next activity
-                    var cart_id:Int = 1
-                    val intent = Intent(baseContext, MainActivity::class.java)
-                    intent.putExtra("cart_id", cart_id.toString())
-                    startActivity(intent)
 
                     Toast.makeText(this@LoginActivity, response, Toast.LENGTH_SHORT).show()
                 } else {
