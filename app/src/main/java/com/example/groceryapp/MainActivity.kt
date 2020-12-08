@@ -12,9 +12,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //returning 1
+        //getting the important variable to pass into activities
         val cartID = intent.getStringExtra("cart_id")
+        val userID = intent.getStringExtra("user_id")
         Log.e("winniecheck",cartID.toString())
+        Log.e("winniecheck",userID.toString())
 
         //Accessing UI
         //profile page
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             //pass the user cart id into the cart activities
             val intent = Intent(baseContext, CartActivity::class.java)
             intent.putExtra("cart_id", cartID)
+            intent.putExtra("user_id", userID)
             startActivity(intent)
         }
 
@@ -45,7 +48,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(baseContext, ShopNowActivity::class.java)
             intent.putExtra("cart_id", cartID)
             startActivity(intent)
-
         }
 
         //view promo
@@ -53,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         salesButton.setOnClickListener{
             //jump to new activity/fragment
             startActivity(Intent(this, SalesActivity::class.java))
-
         }
 
         //view website

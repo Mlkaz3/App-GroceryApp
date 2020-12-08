@@ -29,7 +29,7 @@ class CheckoutActivity : AppCompatActivity() {
     lateinit var amount:String
     lateinit var order_number:String
     lateinit var cartID: String
-
+    lateinit var userID:String
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,9 @@ class CheckoutActivity : AppCompatActivity() {
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
+        userID = intent.getStringExtra("user_id").toString()
         Log.e("winniecheck",cartID.toString())
+        Log.e("winniecheck",userID.toString())
 
         val backButton: ImageButton = findViewById(R.id.back3)
         backButton.setOnClickListener {
@@ -101,27 +103,21 @@ class CheckoutActivity : AppCompatActivity() {
                 //move the cart items to the orderitems table (do at backend)
                 //get the current date and time to write to database
 
-                //writeOrder to 3 tables
                 writeOrder()
-
-                updateOrderItem()
-
-                openDialog()
             }
         }
     }
 
     private fun updateOrderItem() {
         //update orderitems, remove cartitems
-        //TO DO: TRY TO WRITE TO SERVER
-        //SUCCESS WHILE RUNNING ON SERVER
         val url:String =  "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertcartitemsintoorderitems.php" +
                 "?order_number=" + order_number  + "&cart_id=" + cartID
         Log.e("winnie",url)
 
         val stringRequest1 = StringRequest(Request.Method.GET, url,
                 Response.Listener<String> { response ->
-                    Log.e("winnie", response)
+                    //current response is return the array of cartitems
+                    Log.e("lastcheckJsonRes", response)
 
                     try{
                         if(response != null){
@@ -131,6 +127,7 @@ class CheckoutActivity : AppCompatActivity() {
 
                             if(success == "1"){
                                 Toast.makeText(this,"Order placed successfully.", Toast.LENGTH_LONG).show()
+                                openDialog()
 
                             }else{
                                 Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
@@ -149,10 +146,9 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
 
-    //able to write order but can't response to user so far
+    //able to write order but can't response in UI
     @RequiresApi(Build.VERSION_CODES.O)
     private fun writeOrder() {
-
         //record the date and time when user place order to add to database
         //credit to:https://grokonez.com/kotlin/kotlin-get-current-datetime#I_Kotlin_8211_Get_Current_DateTime
         val currentDateTime = LocalDateTime.now()
@@ -170,38 +166,28 @@ class CheckoutActivity : AppCompatActivity() {
         var payment = (Math.random()*100000000).toInt()
         val payment_id:String = "P" + String.format("%08d",payment)
 
-
         //user_id that get from intent
-        var user_id = 1
+        var user_id = userID
 
         //write order details to database using json
         val info:String = "https://groceryapptarucproject.000webhostapp.com/grocery/order/insertorder.php"+
                 "?order_number=$order_number&payment_amount=$amount" + "&payment_method=$paymentMethod&delivery_address=${address.text}&user_id=$user_id&delivery_id=$delivery_id&payment_id=$payment_id&delivery_method=$deliveryMethod&order_date=$date&order_time=$time"
-        Log.e("winnie",info)
 
-        Log.e("winnie",amount)
-        Log.e("winnie",address.text.toString())
-
-        //BUG (SOLVED)
-        //if user did not re-choose the radio button, error will be occured
-        //if they re-choose and cause the toast of selection displayed, then there will be no bug :)
-       Log.e("winnie",deliveryMethod)
-       Log.e("winnie",paymentMethod)
-
-        //this part got error
-        //ERROR1: CANT WRITE THE CARTITEMS INTO ORDERITEMS
+        //insert into 3 tables: delivery, payment and order
         val stringRequest = StringRequest(Request.Method.GET, info,
                 Response.Listener<String> { response ->
-                    Log.e("winnie", response)
+                    Log.e("lastcheckJsonRes", response)
 
                     try{
                         if(response != null){
+                            //do some changes
                             val strResponse = response.toString()
                             val jsonResponse  = JSONObject(strResponse)
                             val success: String = jsonResponse.get("success").toString()
 
                             if(success == "1"){
                                 Toast.makeText(this,"Loading... ", Toast.LENGTH_LONG).show()
+                                updateOrderItem()
 
                             }else{
                                 Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
@@ -221,13 +207,9 @@ class CheckoutActivity : AppCompatActivity() {
 
     //show user order placed successfully dialog
     private fun openDialog() {
-        // create an alert builder
+        // create an simple alert builder
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Thank You for CHOOSING US")
-
-        // set the custom layout
-//        val customLayout: View = layoutInflater.inflate(R.layout.mydialog, null);
-//        builder.setView(customLayout);
+        builder.setTitle("THANK YOU FOR CHOOSING US")
 
         builder.setMessage("You have place an order successfully! Kindly wait for seller to ship your item(s). Have a nice day :)")
         builder
@@ -237,12 +219,11 @@ class CheckoutActivity : AppCompatActivity() {
                     //close the dialog
                     dialog.cancel()
                     //bring the user back to menu bringing the cart_id
-
                     val intent = Intent(baseContext, MainActivity::class.java)
                     intent.putExtra("cart_id", cartID)
+                    intent.putExtra("user_id", userID)
                     startActivity(intent)
                 }
-
 
         // create and show the alert dialog
         val dialog: AlertDialog = builder.create()

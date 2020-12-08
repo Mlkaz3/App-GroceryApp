@@ -34,6 +34,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
     lateinit var cartID:String
+    lateinit var userID:String
 
     //onCreate()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +45,9 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
+        userID = intent.getStringExtra("user_id").toString()
         Log.e("winniecheck",cartID.toString())
+        Log.e("winniecheck",userID.toString())
 
         val backButton: ImageButton = findViewById(R.id.back2)
         backButton.setOnClickListener {
@@ -52,12 +55,12 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         }
 
         val intent = Intent(this, CheckoutActivity::class.java)
-
         val checkoutButton:Button = findViewById(R.id.checkoutButton)
         checkoutButton.setOnClickListener {
             val total:TextView = findViewById(R.id.total)
             intent.putExtra("amount", total.text)
             intent.putExtra("cart_id", cartID)
+            intent.putExtra("user_id", userID)
             startActivity(intent)
         }
 
@@ -132,7 +135,8 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
                     if(response != null){
                         val strResponse = response.toString()
                         val jsonResponse  = JSONObject(strResponse)
-                        val jsonArray: JSONArray = jsonResponse.getJSONArray("cart1")
+                        //due to the server array
+                        val jsonArray: JSONArray = jsonResponse.getJSONArray("cart"+ cartID)
                         val size: Int = jsonArray.length()
                         for(i in 0.until(size)){
                             var jsonCartItem: JSONObject = jsonArray.getJSONObject(i)
@@ -223,9 +227,6 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             Response.Listener { response ->
-                // Process the JSON
-                //it's not giving response here
-                Log.e("winnie", response.toString())
                 try{
                     if(response != null){
                         Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()

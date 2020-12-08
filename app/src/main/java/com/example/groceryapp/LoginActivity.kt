@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
                     ed_password!!.setText("")
 
 
-                    //read the user cart_id from the server
+                    //read the user user_id and cart_id from the server
                     val url = "https://groceryapptarucproject.000webhostapp.com/grocery/getdata.php?email=" + str_email + "&password=" + str_password
                     val jsonObjectRequest = JsonObjectRequest(
                         Request.Method.GET, url, null,
@@ -78,11 +78,12 @@ class LoginActivity : AppCompatActivity() {
 
 
                                         //pass the user cart_id to next activity
+                                        var user_id:Int = userID.toInt()
                                         var cart_id:Int = cartID.toInt()
                                         val intent = Intent(baseContext, MainActivity::class.java)
                                         intent.putExtra("cart_id", cart_id.toString())
+                                        intent.putExtra("user_id",user_id.toString())
                                         startActivity(intent)
-
 
                                     }
                                 }

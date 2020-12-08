@@ -32,6 +32,7 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
+        //get cartID
         cartID = intent.getStringExtra("cart_id").toString()
         Log.e("winniecheck",cartID.toString())
 
@@ -80,12 +81,11 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
         recyclerview.adapter = adapter
         recyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false)
         recyclerview.setHasFixedSize(true)
-        Log.e("read category","IS HERE RUN? WHY UI NOT WORKING THO..X")
 
     }
 
+    //to get product list according the category sorting
     private fun readCategoryProduct(URL:String, categoryChoose: String) {
-        Log.e("read category","entering this function")
         val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, URL, null,
                 Response.Listener { response ->
@@ -127,17 +127,14 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
-        Log.e("read category",jsonObjectRequest.toString())
-
     }
 
-    //only available to send once TT
+    //ERROR: only available to send once TT
     override fun addCartClicked(itemData: Product, position: Int) {
-
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=" + cartID + "&product_id=" + itemData.productID
-
         val stringRequest = StringRequest(Request.Method.GET, url,
                 Response.Listener<String> { response ->
+                    //to be update here, the response
                     try{
                         if(response != null){
                             val strResponse = response.toString()
@@ -156,7 +153,6 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
                         Log.d("Main", "Response: %s".format(e.message.toString()))
 
                     }
-
                 },
                 Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
 
