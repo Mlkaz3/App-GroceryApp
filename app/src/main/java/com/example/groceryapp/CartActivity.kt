@@ -29,17 +29,19 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
     //declare product array list
     var userCartList:ArrayList<CartItem> = ArrayList<CartItem>()
+    lateinit var viewModel:CartItemViewModel
     lateinit var adapter: CartItemAdapter
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
     lateinit var cartID:String
     lateinit var userID:String
-    lateinit var localCartList:GlobalClass
 
     //onCreate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
+
+        viewModel = ViewModelProviders.of(this)[CartItemViewModel::class.java]
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -77,9 +79,9 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         super.onStart()
 
         //initialise
-        userCartList = ArrayList<CartItem>(userCartList)
+        userCartList = ArrayList<CartItem>()
         adapter = CartItemAdapter(this,this)
-        adapter.setProducts(userCartList)
+        adapter.setProducts(viewModel.localuserCartList)
 
         readCart()
 
@@ -95,7 +97,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //during onPause() the array remains as the updated value, but once it went to onStart, thn it's not update
     override fun onPause(){
         super.onPause()
-        Log.e("check cart size", userCartList.size.toString())
+        Log.e("check cart size", viewModel.localuserCartList.size.toString())
 
     }
 
@@ -145,8 +147,9 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
                             userCartList.add(cartitem)
                             adapter!!.notifyDataSetChanged()
-                            localCartList.addItem(cartitem)
-                            Log.e("winniecheck1",localCartList.toString())
+
+                            viewModel.localuserCartList.add(cartitem)
+                            Log.e("localUserCart",viewModel.localuserCartList[i].toString())
 
                             subtotalCal += cartitem.subtotal
                             Log.e("winnie",subtotalCal.toString())

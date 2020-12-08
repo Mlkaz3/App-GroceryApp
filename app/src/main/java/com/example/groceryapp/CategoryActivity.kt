@@ -87,42 +87,42 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
     //to get product list according the category sorting
     private fun readCategoryProduct(URL:String, categoryChoose: String) {
         val jsonObjectRequest = JsonObjectRequest(
-                Request.Method.GET, URL, null,
-                Response.Listener { response ->
-                    // Process the JSON
-                    try{
-                        if(response != null){
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val jsonArray: JSONArray = jsonResponse.getJSONArray(categoryChoose)
-                            val size: Int = jsonArray.length()
-                            for(i in 0.until(size)){
-                                var jsonProduct: JSONObject = jsonArray.getJSONObject(i)
-                                var product: Product = Product(jsonProduct.getInt("product_id"),jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
-                                        jsonProduct.getInt("product_stock"))
-                                Log.e("read category",jsonProduct.toString())
-                                productlist.add(product)
-                                adapter!!.notifyDataSetChanged()
-                            }
-                            Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
-
+            Request.Method.GET, URL, null,
+            Response.Listener { response ->
+                // Process the JSON
+                try{
+                    if(response != null){
+                        val strResponse = response.toString()
+                        val jsonResponse  = JSONObject(strResponse)
+                        val jsonArray: JSONArray = jsonResponse.getJSONArray(categoryChoose)
+                        val size: Int = jsonArray.length()
+                        for(i in 0.until(size)){
+                            var jsonProduct: JSONObject = jsonArray.getJSONObject(i)
+                            var product: Product = Product(jsonProduct.getInt("product_id"),jsonProduct.getString("product_name"), jsonProduct.getDouble("product_price"),jsonProduct.getString("product_category"),jsonProduct.getString("product_img"),
+                                jsonProduct.getInt("product_stock"))
+                            Log.e("read category",jsonProduct.toString())
+                            productlist.add(product)
+                            adapter!!.notifyDataSetChanged()
                         }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
-
+                        Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
 
                     }
-                },
-                Response.ErrorListener { error ->
-                    Log.d("Main", "Response: %s".format(error.message.toString()))
+                }catch (e:Exception){
+                    Log.d("Main", "Response: %s".format(e.message.toString()))
+
+
                 }
+            },
+            Response.ErrorListener { error ->
+                Log.d("Main", "Response: %s".format(error.message.toString()))
+            }
         )
 
         //Volley request policy, only one time request
         jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                0, //no retry
-                1f
+            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+            0, //no retry
+            1f
         )
 
         // Access the RequestQueue through your singleton class.
@@ -133,28 +133,28 @@ class CategoryActivity : AppCompatActivity() ,ProductItemOnClickListener{
     override fun addCartClicked(itemData: Product, position: Int) {
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id=" + cartID + "&product_id=" + itemData.productID
         val stringRequest = StringRequest(Request.Method.GET, url,
-                Response.Listener<String> { response ->
-                    //to be update here, the response
-                    try{
-                        if(response != null){
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
+            Response.Listener<String> { response ->
+                //to be update here, the response
+                try{
+                    if(response != null){
+                        val strResponse = response.toString()
+                        val jsonResponse  = JSONObject(strResponse)
+                        val success: String = jsonResponse.get("success").toString()
 
-                            if(success == "1"){
-                                Toast.makeText(this, itemData.productName + " added to cart", Toast.LENGTH_LONG).show()
+                        if(success == "1"){
+                            Toast.makeText(this, itemData.productName + " added to cart", Toast.LENGTH_LONG).show()
 
-                            }else{
-                                Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
-                            }
-
+                        }else{
+                            Toast.makeText(this, "Unable to ad item to cart.", Toast.LENGTH_LONG).show()
                         }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
 
                     }
-                },
-                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+                }catch (e:Exception){
+                    Log.d("Main", "Response: %s".format(e.message.toString()))
+
+                }
+            },
+            Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest)

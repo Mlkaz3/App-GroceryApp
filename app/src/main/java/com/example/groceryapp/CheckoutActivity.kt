@@ -21,8 +21,8 @@ import java.time.format.FormatStyle
 class CheckoutActivity : AppCompatActivity() {
 
     //initialise based on UI
-     var paymentMethod:String = "e-wallet"
-     var deliveryMethod:String = "Poslaju"
+    var paymentMethod:String = "e-wallet"
+    var deliveryMethod:String = "Poslaju"
 
     lateinit var address:EditText
     lateinit var notes:EditText
@@ -51,24 +51,24 @@ class CheckoutActivity : AppCompatActivity() {
         //Delivery Radio Group
         val payment_radio_group:RadioGroup = findViewById(R.id.payment)
         payment_radio_group.setOnCheckedChangeListener(
-                RadioGroup.OnCheckedChangeListener { group, checkedId ->
-                    val radio: RadioButton = findViewById(checkedId)
-                    Toast.makeText(applicationContext,"Payment Choice :"+
-                            " ${radio.text}",
-                            Toast.LENGTH_SHORT).show()
-                    paymentMethod= "${radio.text}"
-                })
+            RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                val radio: RadioButton = findViewById(checkedId)
+                Toast.makeText(applicationContext,"Payment Choice :"+
+                        " ${radio.text}",
+                    Toast.LENGTH_SHORT).show()
+                paymentMethod= "${radio.text}"
+            })
 
         //Delivery Radio Group
         val delivery_radio_group:RadioGroup = findViewById(R.id.delivery)
         delivery_radio_group.setOnCheckedChangeListener(
-                RadioGroup.OnCheckedChangeListener { group, checkedId ->
-                    val radio: RadioButton = findViewById(checkedId)
-                    Toast.makeText(applicationContext,"Delivery Choice :"+
-                            " ${radio.text}",
-                            Toast.LENGTH_SHORT).show()
-                    deliveryMethod= "${radio.text}"
-                })
+            RadioGroup.OnCheckedChangeListener { group, checkedId ->
+                val radio: RadioButton = findViewById(checkedId)
+                Toast.makeText(applicationContext,"Delivery Choice :"+
+                        " ${radio.text}",
+                    Toast.LENGTH_SHORT).show()
+                deliveryMethod= "${radio.text}"
+            })
 
         //Payment Amount Text
         var payment_amount:TextView = findViewById(R.id.amount)
@@ -115,31 +115,31 @@ class CheckoutActivity : AppCompatActivity() {
         Log.e("winnie",url)
 
         val stringRequest1 = StringRequest(Request.Method.GET, url,
-                Response.Listener<String> { response ->
-                    //current response is return the array of cartitems
-                    Log.e("lastcheckJsonRes", response)
+            Response.Listener<String> { response ->
+                //current response is return the array of cartitems
+                Log.e("lastcheckJsonRes", response)
 
-                    try{
-                        if(response != null){
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
+                try{
+                    if(response != null){
+                        val strResponse = response.toString()
+                        val jsonResponse  = JSONObject(strResponse)
+                        val success: String = jsonResponse.get("success").toString()
 
-                            if(success == "1"){
-                                Toast.makeText(this,"Order placed successfully.", Toast.LENGTH_LONG).show()
-                                openDialog()
+                        if(success == "1"){
+                            Toast.makeText(this,"Order placed successfully.", Toast.LENGTH_LONG).show()
+                            openDialog()
 
-                            }else{
-                                Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
-                            }
-
+                        }else{
+                            Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
                         }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
-                    }
 
-                },
-                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+                    }
+                }catch (e:Exception){
+                    Log.d("Main", "Response: %s".format(e.message.toString()))
+                }
+
+            },
+            Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest1)
@@ -175,31 +175,31 @@ class CheckoutActivity : AppCompatActivity() {
 
         //insert into 3 tables: delivery, payment and order
         val stringRequest = StringRequest(Request.Method.GET, info,
-                Response.Listener<String> { response ->
-                    Log.e("lastcheckJsonRes", response)
+            Response.Listener<String> { response ->
+                Log.e("lastcheckJsonRes", response)
 
-                    try{
-                        if(response != null){
-                            //do some changes
-                            val strResponse = response.toString()
-                            val jsonResponse  = JSONObject(strResponse)
-                            val success: String = jsonResponse.get("success").toString()
+                try{
+                    if(response != null){
+                        //do some changes
+                        val strResponse = response.toString()
+                        val jsonResponse  = JSONObject(strResponse)
+                        val success: String = jsonResponse.get("success").toString()
 
-                            if(success == "1"){
-                                Toast.makeText(this,"Loading... ", Toast.LENGTH_LONG).show()
-                                updateOrderItem()
+                        if(success == "1"){
+                            Toast.makeText(this,"Loading... ", Toast.LENGTH_LONG).show()
+                            updateOrderItem()
 
-                            }else{
-                                Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
-                            }
-
+                        }else{
+                            Toast.makeText(this, "Error occured. Please try again later", Toast.LENGTH_LONG).show()
                         }
-                    }catch (e:Exception){
-                        Log.d("Main", "Response: %s".format(e.message.toString()))
-                    }
 
-                },
-                Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
+                    }
+                }catch (e:Exception){
+                    Log.d("Main", "Response: %s".format(e.message.toString()))
+                }
+
+            },
+            Response.ErrorListener { error -> Log.d("Main", "Response: %s".format(error.message.toString())) })
 
         // Add the request to the RequestQueue.
         MySingleton.getInstance(this).addToRequestQueue(stringRequest)
@@ -213,17 +213,17 @@ class CheckoutActivity : AppCompatActivity() {
 
         builder.setMessage("You have place an order successfully! Kindly wait for seller to ship your item(s). Have a nice day :)")
         builder
-                .setPositiveButton(
-                        "OK"
-                ) { dialog, _ -> // When the user click ok button
-                    //close the dialog
-                    dialog.cancel()
-                    //bring the user back to menu bringing the cart_id
-                    val intent = Intent(baseContext, MainActivity::class.java)
-                    intent.putExtra("cart_id", cartID)
-                    intent.putExtra("user_id", userID)
-                    startActivity(intent)
-                }
+            .setPositiveButton(
+                "OK"
+            ) { dialog, _ -> // When the user click ok button
+                //close the dialog
+                dialog.cancel()
+                //bring the user back to menu bringing the cart_id
+                val intent = Intent(baseContext, MainActivity::class.java)
+                intent.putExtra("cart_id", cartID)
+                intent.putExtra("user_id", userID)
+                startActivity(intent)
+            }
 
         // create and show the alert dialog
         val dialog: AlertDialog = builder.create()
