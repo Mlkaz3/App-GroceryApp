@@ -76,7 +76,6 @@ class LoginActivity : AppCompatActivity() {
                                         Log.e("get userID",userID)
                                         Log.e("get cartID",cartID)
 
-
                                         //pass the user cart_id to next activity
                                         var user_id:Int = userID.toInt()
                                         var cart_id:Int = cartID.toInt()

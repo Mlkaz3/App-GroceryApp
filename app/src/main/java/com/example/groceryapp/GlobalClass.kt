@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.groceryapp.Model.CartItem
 
 class GlobalClass:  Application(){
-    lateinit var _cartList:ArrayList<CartItem>
+    var _cartList:ArrayList<CartItem> = ArrayList<CartItem>()
 
     //use when loading items from the server
     //use when user press add to cart

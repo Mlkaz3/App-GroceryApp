@@ -19,9 +19,11 @@ import com.example.groceryapp.Adapter.ProductAdapter
 import com.example.groceryapp.Adapter.ProductItemOnClickListener
 import com.example.groceryapp.Model.CartItem
 import com.example.groceryapp.Model.Product
+import com.example.groceryapp.GlobalClass
 import com.example.groceryapp.ViewModel.CartItemViewModel
 import org.json.JSONArray
 import org.json.JSONObject
+
 
 
 class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
@@ -164,7 +166,6 @@ class ShopNowActivity : AppCompatActivity() ,ProductItemOnClickListener{
     fun AddCart(product: Product) {
         //step1: update local database
         var cartitem:CartItem = CartItem(1,product,product.productPrice)
-
 
         //step2: write to database(cart section), update cart item :)
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/insertcartnoduplicate.php?cart_id="  + cartID + "&product_id=" + product.productID

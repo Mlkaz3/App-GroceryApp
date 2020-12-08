@@ -28,8 +28,7 @@ import org.json.JSONObject
 class CartActivity : AppCompatActivity(), CartItemOnClickListener{
 
     //declare product array list
-    var userCartList:ArrayList<CartItem> = ArrayList<CartItem>()
-    lateinit var viewModel:CartItemViewModel
+    lateinit var userCartList:ArrayList<CartItem>
     lateinit var adapter: CartItemAdapter
     var subtotalCal:Double = 0.0
     var totalCal:Double = 0.0
@@ -41,7 +40,6 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        viewModel = ViewModelProviders.of(this)[CartItemViewModel::class.java]
 
         //get the card_id from a=main activity
         cartID = intent.getStringExtra("cart_id").toString()
@@ -81,7 +79,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         //initialise
         userCartList = ArrayList<CartItem>()
         adapter = CartItemAdapter(this,this)
-        adapter.setProducts(viewModel.localuserCartList)
+        adapter.setProducts(userCartList)
 
         readCart()
 
@@ -97,7 +95,6 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //during onPause() the array remains as the updated value, but once it went to onStart, thn it's not update
     override fun onPause(){
         super.onPause()
-        Log.e("check cart size", viewModel.localuserCartList.size.toString())
 
     }
 
@@ -128,71 +125,68 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         val cartamount: TextView = findViewById(R.id.cartamount)
 
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, url, null,
-            Response.Listener { response ->
-                // Process the JSON
-                try{
-                    if(response != null){
-                        val strResponse = response.toString()
-                        val jsonResponse  = JSONObject(strResponse)
-                        //due to the server array
-                        val jsonArray: JSONArray = jsonResponse.getJSONArray("cart"+ cartID)
-                        val size: Int = jsonArray.length()
-                        for(i in 0.until(size)){
-                            var jsonCartItem: JSONObject = jsonArray.getJSONObject(i)
+                Request.Method.GET, url, null,
+                Response.Listener { response ->
+                    // Process the JSON
+                    try{
+                        if(response != null){
+                            val strResponse = response.toString()
+                            val jsonResponse  = JSONObject(strResponse)
+                            //due to the server array
+                            val jsonArray: JSONArray = jsonResponse.getJSONArray("cart"+ cartID)
+                            val size: Int = jsonArray.length()
+                            for(i in 0.until(size)){
+                                var jsonCartItem: JSONObject = jsonArray.getJSONObject(i)
 
-                            var cartitem: CartItem = CartItem(jsonCartItem.getInt("qty"),Product(jsonCartItem.getInt("product_id"),jsonCartItem.getString("product_name"),jsonCartItem.getDouble("product_price"),
-                                jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
-                                jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
+                                var cartitem: CartItem = CartItem(jsonCartItem.getInt("qty"),Product(jsonCartItem.getInt("product_id"),jsonCartItem.getString("product_name"),jsonCartItem.getDouble("product_price"),
+                                        jsonCartItem.getString("product_category"), jsonCartItem.getString("product_img"),
+                                        jsonCartItem.getInt("product_stock")),jsonCartItem.getDouble("subtotal"))
 
-                            userCartList.add(cartitem)
-                            adapter!!.notifyDataSetChanged()
+                                userCartList.add(cartitem)
+                                adapter!!.notifyDataSetChanged()
 
-                            viewModel.localuserCartList.add(cartitem)
-                            Log.e("localUserCart",viewModel.localuserCartList[i].toString())
+                                subtotalCal += cartitem.subtotal
+                                Log.e("winnie",subtotalCal.toString())
+                            }
+                            Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
+                            cartamount.text = "$size total items"
 
-                            subtotalCal += cartitem.subtotal
-                            Log.e("winnie",subtotalCal.toString())
+                            //accessing ui
+                            val subtotal:TextView = findViewById(R.id.subtotal)
+                            val shipping:TextView = findViewById(R.id.shipping)
+                            val total:TextView = findViewById(R.id.total)
+
+                            //calculation variable
+                            var shippingCal:Double =0.0
+
+                            //perform simple calculation
+                            if(subtotalCal >80){
+                                //free shipping fees
+                                totalCal = subtotalCal
+                            }
+                            else{
+                                shippingCal = 10.0
+                                totalCal = shippingCal + subtotalCal
+                            }
+
+                            subtotal.text = subtotalCal.toString()
+                            shipping.text = shippingCal.toString()
+                            total.text = totalCal.toString()
                         }
-                        Toast.makeText(applicationContext, "Record found :$size", Toast.LENGTH_LONG).show()
-                        cartamount.text = "$size total items"
-
-                        //accessing ui
-                        val subtotal:TextView = findViewById(R.id.subtotal)
-                        val shipping:TextView = findViewById(R.id.shipping)
-                        val total:TextView = findViewById(R.id.total)
-
-                        //calculation variable
-                        var shippingCal:Double =0.0
-
-                        //perform simple calculation
-                        if(subtotalCal >80){
-                            //free shipping fees
-                            totalCal = subtotalCal
-                        }
-                        else{
-                            shippingCal = 10.0
-                            totalCal = shippingCal + subtotalCal
-                        }
-
-                        subtotal.text = subtotalCal.toString()
-                        shipping.text = shippingCal.toString()
-                        total.text = totalCal.toString()
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
                     }
-                }catch (e:Exception){
-                    Log.d("Main", "Response: %s".format(e.message.toString()))
+                },
+                Response.ErrorListener { error ->
+                    Log.d("Main", "Response: %s".format(error.message.toString()))
                 }
-            },
-            Response.ErrorListener { error ->
-                Log.d("Main", "Response: %s".format(error.message.toString()))
-            }
         )
 
         //Volley request policy, only one time request
         jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-            0, //no retry
-            1f
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                0, //no retry
+                1f
         )
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
@@ -225,28 +219,28 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         //write to database(cart section), update cart item qty
         val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, url, null,
-            Response.Listener { response ->
-                try{
-                    if(response != null){
-                        Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
+                Request.Method.GET, url, null,
+                Response.Listener { response ->
+                    try{
+                        if(response != null){
+                            Toast.makeText(this, itemData.productInfo.productName + " quantity updated!", Toast.LENGTH_LONG).show()
+
+                        }
+                    }catch (e:Exception){
+                        Log.d("Main", "Response: %s".format(e.message.toString()))
 
                     }
-                }catch (e:Exception){
-                    Log.d("Main", "Response: %s".format(e.message.toString()))
+                },
+                Response.ErrorListener { error ->
+                    Log.d("Main", "Response: %s".format(error.message.toString()))
 
-                }
-            },
-            Response.ErrorListener { error ->
-                Log.d("Main", "Response: %s".format(error.message.toString()))
-
-            })
+                })
 
         //Volley request policy, only one time request
         jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
-            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-            0, //no retry
-            1f
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                0, //no retry
+                1f
         )
 
         // Access the RequestQueue through your singleton class.
