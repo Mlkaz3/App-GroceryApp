@@ -218,6 +218,7 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
         if(itemData.productQty == 1){
             //how to delete the record in view
             displayDialog(itemData,position)
+            calculationMinus(itemData)
         }else{
             itemData.productQty -= 1
             //perform calculation within the app :)
