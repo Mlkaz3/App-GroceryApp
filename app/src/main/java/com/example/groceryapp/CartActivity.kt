@@ -293,7 +293,14 @@ class CartActivity : AppCompatActivity(), CartItemOnClickListener{
     //WORKING, BUT IF READ FROM DATABASE IS NOT UPDATE THEN HERE CONSIDER AS BUG
     fun updateQty(itemData: CartItem){
         //write to database(cart section), update cart item qty
-        val url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        var url = ""
+
+        if(itemData.productQty == 0){
+             url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/deletecartitem.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        }else{
+             url = "https://groceryapptarucproject.000webhostapp.com/grocery/cart/updatequantity.php?cart_id=" + cartID + "&product_id="+ itemData.productInfo.productID.toString() + "&qty=" + itemData.productQty
+        }
+
         val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 Response.Listener { response ->
